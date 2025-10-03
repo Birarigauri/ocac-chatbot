@@ -38,11 +38,11 @@ const Index = () => {
   };
 
   return (
-    <div style={mainStyle}>
+    <div style={{...mainStyle, marginTop: 0}}>
       {/* Header */}
       <header style={headerStyle}>
         <div className="container">
-          <div className="d-flex align-items-center justify-content-between py-4">
+          <div className="d-flex align-items-center justify-content-between py-3">
             <div className="d-flex align-items-center">
               <Sprout size={32} className="text-success me-2" />
               <h1 className="h2 fw-bold mb-0" style={{ color: '#1f2937' }}>Farmer Portal</h1>

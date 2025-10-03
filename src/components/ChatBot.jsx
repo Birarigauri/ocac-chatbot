@@ -1,9 +1,12 @@
-import { X, Bot, User, Volume2 } from "lucide-react";
-import { useState } from "react";
+import { X, Bot, User, Volume2, Send, Mic, MicOff } from "lucide-react";
+import { useState, useRef } from "react";
 
 const ChatBot = ({ isOpen, onClose }) => {
   const [messages, setMessages] = useState([]);
   const [askedQuestions, setAskedQuestions] = useState([]);
+  const [inputText, setInputText] = useState('');
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef(null);
 
   const questions = [
     "What crops grow best in my region?",
@@ -28,6 +31,45 @@ const ChatBot = ({ isOpen, onClose }) => {
       { type: 'bot', text: answers[question] }
     ]);
     setAskedQuestions(prev => [...prev, question]);
+  };
+
+  const handleSendMessage = () => {
+    if (!inputText.trim()) return;
+    
+    const response = answers[inputText] || "I'm sorry, I don't have information about that specific question. Please try one of the suggested questions or rephrase your query.";
+    
+    setMessages(prev => [
+      ...prev,
+      { type: 'user', text: inputText },
+      { type: 'bot', text: response }
+    ]);
+    setInputText('');
+  };
+
+  const startListening = () => {
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = false;
+      recognitionRef.current.lang = 'en-US';
+      
+      recognitionRef.current.onstart = () => setIsListening(true);
+      recognitionRef.current.onend = () => setIsListening(false);
+      
+      recognitionRef.current.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setInputText(transcript);
+      };
+      
+      recognitionRef.current.start();
+    }
+  };
+
+  const stopListening = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+    }
   };
 
   if (!isOpen) return null;
@@ -74,7 +116,7 @@ const ChatBot = ({ isOpen, onClose }) => {
     <>
       <div style={chatbotStyle} className="border d-flex flex-column">
         {/* Header */}
-        <div style={headerStyle} className="d-flex align-items-center justify-content-between p-3 border-bottom">
+        <div style={headerStyle} className="d-flex align-items-center justify-content-between p-3">
           <div className="d-flex align-items-center">
             <Bot size={20} className="me-2" />
             <h5 className="mb-0 fw-semibold">AI Assistant</h5>
@@ -162,10 +204,44 @@ const ChatBot = ({ isOpen, onClose }) => {
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="p-3 border-top">
-          <button onClick={onClose} className="btn btn-outline-secondary w-100">
-            Exit
+        {/* Input Area */}
+        <div className="p-2 text-center border-top bg-white">
+            {
+              isListening && <img src="/recording.gif" alt="" />
+            }
+          <div className="d-flex gap-2 mb-2">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Type your question..."
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+              style={{ borderRadius: '20px' }}
+            />
+            <button
+              onClick={isListening ? stopListening : startListening}
+              className={`btn ${isListening ? 'btn-danger' : 'btn-outline-primary'} rounded-circle`}
+              style={{ 
+                width: '40px', 
+                height: '40px',
+                animation: isListening ? 'wave 0.5s ease-in-out infinite alternate' : 'none'
+              }}
+              title={isListening ? 'Stop listening' : 'Start voice input'}
+            >
+              {isListening ? <MicOff size={16} /> : <Mic size={16} />}
+            </button>
+            <button
+              onClick={handleSendMessage}
+              className="btn btn-success rounded-circle"
+              style={{ width: '40px', height: '40px' }}
+              title="Send message"
+            >
+              <Send size={16} />
+            </button>
+          </div>
+          <button onClick={onClose} className="btn btn-outline-secondary w-100 btn-sm">
+            Close Chat
           </button>
         </div>
       </div>
@@ -175,6 +251,10 @@ const ChatBot = ({ isOpen, onClose }) => {
           0%, 100% { transform: translateY(0px) translateX(0px); }
           33% { transform: translateY(-10px) translateX(5px); }
           66% { transform: translateY(5px) translateX(-3px); }
+        }
+        @keyframes wave {
+          0% { transform: scale(1) rotate(-5deg); }
+          100% { transform: scale(1.1) rotate(5deg); }
         }
       `}</style>
     </>
