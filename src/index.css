@@ -1,122 +1,7 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Bootstrap CSS */
+/* @import 'bootstrap/dist/css/bootstrap.min.css'; */
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 15%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 15%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 15%;
-
-    /* Agricultural green theme */
-    --primary: 130 45% 42%;
-    --primary-foreground: 0 0% 100%;
-    
-    --primary-light: 130 40% 55%;
-    --primary-hover: 130 50% 35%;
-
-    --secondary: 130 30% 95%;
-    --secondary-foreground: 130 45% 25%;
-
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
-
-    --accent: 130 35% 90%;
-    --accent-foreground: 130 45% 30%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 130 45% 42%;
-
-    --radius: 0.75rem;
-    
-    /* Custom shadows */
-    --shadow-soft: 0 4px 6px -1px hsl(0 0% 0% / 0.1), 0 2px 4px -2px hsl(0 0% 0% / 0.1);
-    --shadow-medium: 0 10px 15px -3px hsl(0 0% 0% / 0.1), 0 4px 6px -4px hsl(0 0% 0% / 0.1);
-    --shadow-large: 0 20px 25px -5px hsl(0 0% 0% / 0.1), 0 8px 10px -6px hsl(0 0% 0% / 0.1);
-    --shadow-government: 0 25px 50px -12px hsl(0 0% 0% / 0.15), 0 0 0 1px hsl(0 0% 0% / 0.05);
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 0 0% 10%;
-    --foreground: 0 0% 95%;
-
-    --card: 0 0% 12%;
-    --card-foreground: 0 0% 95%;
-
-    --popover: 0 0% 12%;
-    --popover-foreground: 0 0% 95%;
-
-    --primary: 130 45% 45%;
-    --primary-foreground: 0 0% 100%;
-    
-    --primary-light: 130 40% 60%;
-    --primary-hover: 130 50% 38%;
-
-    --secondary: 130 25% 20%;
-    --secondary-foreground: 130 40% 85%;
-
-    --muted: 0 0% 20%;
-    --muted-foreground: 0 0% 60%;
-
-    --accent: 130 30% 25%;
-    --accent-foreground: 130 40% 90%;
-
-    --destructive: 0 62.8% 50%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 130 45% 45%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
+/* Custom animations */
 @keyframes float {
   0%, 100% { transform: translateY(0px) translateX(0px); }
   33% { transform: translateY(-10px) translateX(5px); }
@@ -124,8 +9,12 @@ All colors MUST be HSL.
 }
 
 
-.chatbot {
-  background-image: url("../public/bg.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
+/* Hover effects for buttons */
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+/* Smooth transitions */
+* {
+  transition: all 0.2s ease;
 }
