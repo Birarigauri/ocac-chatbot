@@ -35,3 +35,10 @@
 .read-the-docs {
   color: #888;
 }
+
+.chatbot{
+  background-image: url(../public/bg.jpg)!important;
+  background-repeat: no-repeat!important;
+  background-size: cover!important;
+  background-attachment: fixed;
+}
