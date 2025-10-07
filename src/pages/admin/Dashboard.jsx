@@ -10,21 +10,25 @@ const Dashboard = () => {
 
   const cardStyle = {
     backgroundColor: 'white',
-    borderRadius: '0.75rem',
-    padding: '1.5rem',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-    border: '1px solid #e5e7eb'
+    borderRadius: '16px',
+    padding: '2rem',
+    boxShadow: '0 10px 40px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04)',
+    border: '1px solid rgba(226, 232, 240, 0.8)',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    background: 'linear-gradient(135deg, #ffffff 0%, #fefefe 100%)'
   };
 
   const iconStyle = (color) => ({
-    width: '48px',
-    height: '48px',
-    backgroundColor: color + '20',
-    borderRadius: '0.5rem',
+    width: '56px',
+    height: '56px',
+    background: `linear-gradient(135deg, ${color}15, ${color}25)`,
+    borderRadius: '16px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: color
+    color: color,
+    border: `1px solid ${color}30`,
+    boxShadow: `0 8px 25px ${color}20`
   });
 
   return (
@@ -35,24 +39,41 @@ const Dashboard = () => {
           const Icon = stat.icon;
           return (
             <div key={index} className="col-md-3">
-              <div style={cardStyle}>
-                <div className="d-flex align-items-center justify-content-between mb-3">
+              <div 
+                style={{
+                  ...cardStyle,
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)';
+                  e.currentTarget.style.boxShadow = '0 20px 60px rgba(0,0,0,0.12), 0 8px 25px rgba(0,0,0,0.08)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                  e.currentTarget.style.boxShadow = '0 10px 40px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04)';
+                }}
+              >
+                <div className="d-flex align-items-center justify-content-between mb-4">
                   <div style={iconStyle(stat.color)}>
-                    <Icon size={24} />
+                    <Icon size={26} />
                   </div>
                   <span 
                     className="badge"
                     style={{ 
-                      backgroundColor: '#22c55e20', 
-                      color: '#22c55e',
-                      fontSize: '0.75rem'
+                      background: 'linear-gradient(135deg, #22c55e, #16a34a)', 
+                      color: 'white',
+                      fontSize: '0.8rem',
+                      fontWeight: '600',
+                      padding: '0.5rem 0.75rem',
+                      borderRadius: '20px',
+                      boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)'
                     }}
                   >
                     {stat.change}
                   </span>
                 </div>
-                <h3 className="h4 fw-bold mb-1">{stat.value}</h3>
-                <p className="text-muted mb-0 small">{stat.title}</p>
+                <h3 className="h3 fw-bold mb-2" style={{ color: '#1e293b' }}>{stat.value}</h3>
+                <p className="text-muted mb-0" style={{ fontSize: '0.95rem', fontWeight: '500' }}>{stat.title}</p>
               </div>
             </div>
           );
@@ -63,35 +84,63 @@ const Dashboard = () => {
       <div className="row g-4">
         <div className="col-md-8">
           <div style={cardStyle}>
-            <h5 className="fw-semibold mb-3">Recent Conversations</h5>
+            <div className="d-flex align-items-center justify-content-between mb-4">
+              <h5 className="fw-bold mb-0" style={{ color: '#1e293b', fontSize: '1.25rem' }}>💬 Recent Conversations</h5>
+              <button className="btn btn-outline-primary btn-sm" style={{
+                borderRadius: '20px',
+                fontSize: '0.85rem',
+                fontWeight: '500'
+              }}>View All</button>
+            </div>
             <div className="table-responsive">
-              <table className="table table-hover">
+              <table className="table table-hover" style={{ marginBottom: 0 }}>
                 <thead>
-                  <tr>
-                    <th>User</th>
-                    <th>Question</th>
-                    <th>Time</th>
-                    <th>Status</th>
+                  <tr style={{ borderBottom: '2px solid #f1f5f9' }}>
+                    <th style={{ color: '#64748b', fontWeight: '600', fontSize: '0.9rem', padding: '1rem 0.75rem' }}>User</th>
+                    <th style={{ color: '#64748b', fontWeight: '600', fontSize: '0.9rem', padding: '1rem 0.75rem' }}>Question</th>
+                    <th style={{ color: '#64748b', fontWeight: '600', fontSize: '0.9rem', padding: '1rem 0.75rem' }}>Time</th>
+                    <th style={{ color: '#64748b', fontWeight: '600', fontSize: '0.9rem', padding: '1rem 0.75rem' }}>Status</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>John Farmer</td>
-                    <td>What crops grow best in my region?</td>
-                    <td>2 min ago</td>
-                    <td><span className="badge bg-success">Answered</span></td>
+                  <tr style={{ borderBottom: '1px solid #f8fafc' }}>
+                    <td style={{ padding: '1rem 0.75rem', fontWeight: '500', color: '#334155' }}>👨‍🌾 John Farmer</td>
+                    <td style={{ padding: '1rem 0.75rem', color: '#64748b' }}>What crops grow best in my region?</td>
+                    <td style={{ padding: '1rem 0.75rem', color: '#94a3b8', fontSize: '0.9rem' }}>2 min ago</td>
+                    <td style={{ padding: '1rem 0.75rem' }}><span className="badge" style={{
+                      background: 'linear-gradient(135deg, #22c55e, #16a34a)',
+                      color: 'white',
+                      borderRadius: '20px',
+                      padding: '0.4rem 0.8rem',
+                      fontSize: '0.8rem',
+                      fontWeight: '500'
+                    }}>Answered</span></td>
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid #f8fafc' }}>
+                    <td style={{ padding: '1rem 0.75rem', fontWeight: '500', color: '#334155' }}>👩‍🌾 Mary Smith</td>
+                    <td style={{ padding: '1rem 0.75rem', color: '#64748b' }}>How to improve soil health?</td>
+                    <td style={{ padding: '1rem 0.75rem', color: '#94a3b8', fontSize: '0.9rem' }}>5 min ago</td>
+                    <td style={{ padding: '1rem 0.75rem' }}><span className="badge" style={{
+                      background: 'linear-gradient(135deg, #22c55e, #16a34a)',
+                      color: 'white',
+                      borderRadius: '20px',
+                      padding: '0.4rem 0.8rem',
+                      fontSize: '0.8rem',
+                      fontWeight: '500'
+                    }}>Answered</span></td>
                   </tr>
                   <tr>
-                    <td>Mary Smith</td>
-                    <td>How to improve soil health?</td>
-                    <td>5 min ago</td>
-                    <td><span className="badge bg-success">Answered</span></td>
-                  </tr>
-                  <tr>
-                    <td>Bob Johnson</td>
-                    <td>Best time to plant corn?</td>
-                    <td>8 min ago</td>
-                    <td><span className="badge bg-warning">Pending</span></td>
+                    <td style={{ padding: '1rem 0.75rem', fontWeight: '500', color: '#334155' }}>👨‍🌾 Bob Johnson</td>
+                    <td style={{ padding: '1rem 0.75rem', color: '#64748b' }}>Best time to plant corn?</td>
+                    <td style={{ padding: '1rem 0.75rem', color: '#94a3b8', fontSize: '0.9rem' }}>8 min ago</td>
+                    <td style={{ padding: '1rem 0.75rem' }}><span className="badge" style={{
+                      background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                      color: 'white',
+                      borderRadius: '20px',
+                      padding: '0.4rem 0.8rem',
+                      fontSize: '0.8rem',
+                      fontWeight: '500'
+                    }}>Pending</span></td>
                   </tr>
                 </tbody>
               </table>
@@ -101,12 +150,91 @@ const Dashboard = () => {
 
         <div className="col-md-4">
           <div style={cardStyle}>
-            <h5 className="fw-semibold mb-3">Quick Actions</h5>
-            <div className="d-grid gap-2">
-              <button className="btn btn-success">Add New FAQ</button>
-              <button className="btn btn-outline-primary">View All Users</button>
-              <button className="btn btn-outline-secondary">Export Data</button>
-              <button className="btn btn-outline-warning">System Settings</button>
+            <h5 className="fw-bold mb-4" style={{ color: '#1e293b', fontSize: '1.25rem' }}>⚡ Quick Actions</h5>
+            <div className="d-grid gap-3">
+              <button className="btn" style={{
+                background: 'linear-gradient(135deg, #22c55e, #16a34a)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '12px',
+                padding: '0.875rem 1.25rem',
+                fontWeight: '600',
+                fontSize: '0.95rem',
+                boxShadow: '0 8px 25px rgba(34, 197, 94, 0.25)',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 12px 35px rgba(34, 197, 94, 0.35)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 8px 25px rgba(34, 197, 94, 0.25)';
+              }}
+              >📝 Add New FAQ</button>
+              
+              <button className="btn" style={{
+                background: 'linear-gradient(135deg, #3b82f6, #2563eb)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '12px',
+                padding: '0.875rem 1.25rem',
+                fontWeight: '500',
+                fontSize: '0.95rem',
+                boxShadow: '0 8px 25px rgba(59, 130, 246, 0.25)',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 12px 35px rgba(59, 130, 246, 0.35)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 8px 25px rgba(59, 130, 246, 0.25)';
+              }}
+              >👥 View All Users</button>
+              
+              <button className="btn" style={{
+                background: 'linear-gradient(135deg, #6b7280, #4b5563)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '12px',
+                padding: '0.875rem 1.25rem',
+                fontWeight: '500',
+                fontSize: '0.95rem',
+                boxShadow: '0 8px 25px rgba(107, 114, 128, 0.25)',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 12px 35px rgba(107, 114, 128, 0.35)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 8px 25px rgba(107, 114, 128, 0.25)';
+              }}
+              >📄 Export Data</button>
+              
+              <button className="btn" style={{
+                background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '12px',
+                padding: '0.875rem 1.25rem',
+                fontWeight: '500',
+                fontSize: '0.95rem',
+                boxShadow: '0 8px 25px rgba(245, 158, 11, 0.25)',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 12px 35px rgba(245, 158, 11, 0.35)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 8px 25px rgba(245, 158, 11, 0.25)';
+              }}
+              >⚙️ System Settings</button>
             </div>
           </div>
         </div>
