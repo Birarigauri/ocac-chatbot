@@ -78,23 +78,26 @@ const ChatBot = ({ isOpen, onClose }) => {
     position: 'fixed',
     bottom: '1rem',
     right: '1rem',
-    width: '24rem',
+    width: '28rem',
     height: '500px',
     zIndex: 9999,
     backgroundColor: 'white',
-    borderRadius: '0.5rem',
-    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+    borderRadius: '1rem',
+    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05)',
+    border: 'none',
+    overflow: 'hidden'
   };
 
   const headerStyle = {
-    backgroundColor: '#22c55e',
+    background: 'linear-gradient(135deg, #059669 0%, #22c55e 100%)',
     color: 'white',
-    borderTopLeftRadius: '0.5rem',
-    borderTopRightRadius: '0.5rem'
+    borderTopLeftRadius: '1rem',
+    borderTopRightRadius: '1rem',
+    borderBottom: '1px solid rgba(255,255,255,0.1)'
   };
 
   const chatAreaStyle = {
-    background: 'linear-gradient(to bottom right, #f9fafb, #dbeafe)',
+    background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
     position: 'relative',
     overflowY: 'auto',
     overflowX: 'hidden'
@@ -116,15 +119,32 @@ const ChatBot = ({ isOpen, onClose }) => {
     <>
       <div style={chatbotStyle} className="border d-flex flex-column">
         {/* Header */}
-        <div style={headerStyle} className="d-flex align-items-center justify-content-between p-3">
+        <div style={headerStyle} className="d-flex align-items-center justify-content-between p-4">
           <div className="d-flex align-items-center">
-            <Bot size={20} className="me-2" />
-            <h5 className="mb-0 fw-semibold">AI Assistant</h5>
+            <div style={{
+              background: 'rgba(255,255,255,0.2)',
+              borderRadius: '50%',
+              padding: '8px',
+              marginRight: '12px'
+            }}>
+              <Bot size={20} />
+            </div>
+            <div>
+              <h5 className="mb-0 fw-bold">AI Assistant</h5>
+              <small style={{ opacity: 0.9 }}>Agricultural Support</small>
+            </div>
           </div>
           <button
             onClick={onClose}
-            className="btn btn-link text-white p-1"
-            style={{ border: 'none', background: 'rgba(255,255,255,0.2)', borderRadius: '50%' }}
+            className="btn btn-link text-white p-2"
+            style={{ 
+              border: 'none', 
+              background: 'rgba(255,255,255,0.15)', 
+              borderRadius: '50%',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseEnter={(e) => e.target.style.background = 'rgba(255,255,255,0.25)'}
+            onMouseLeave={(e) => e.target.style.background = 'rgba(255,255,255,0.15)'}
           >
             <X size={16} />
           </button>
@@ -135,27 +155,65 @@ const ChatBot = ({ isOpen, onClose }) => {
           <div style={dotBackgroundStyle}></div>
           <div style={{ position: 'relative', zIndex: 10 }}>
             {messages.length === 0 && (
-              <div className="d-flex align-items-center p-3 mb-3 rounded"
-                style={{ backgroundColor: 'rgba(255,255,255,0.8)' }}>
-                <Bot size={20} className="text-success me-2" />
-                <small>Hello! I'm here to help with your farming questions. Choose one below:</small>
+              <div className="d-flex align-items-start p-4 mb-4 rounded-3"
+                style={{ 
+                  backgroundColor: 'white',
+                  border: '1px solid #e2e8f0',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
+                }}>
+                <div style={{
+                  background: 'linear-gradient(135deg, #059669, #22c55e)',
+                  borderRadius: '50%',
+                  padding: '8px',
+                  marginRight: '12px',
+                  minWidth: '36px',
+                  height: '36px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <Bot size={18} className="text-white" />
+                </div>
+                <div>
+                  <div className="fw-semibold text-dark mb-1">Welcome! 👋</div>
+                  <span className="text-muted">I'm your agricultural assistant. Select a question below or type your own:</span>
+                </div>
               </div>
             )}
 
             {messages.map((message, index) => (
-              <div key={index} className={`d-flex mb-3 ${message.type === 'user' ? 'justify-content-end' : 'justify-content-start'}`}>
-                {message.type === 'bot' && <Bot size={20} className="text-success me-2 mt-1" />}
+              <div key={index} className={`d-flex mb-4 ${message.type === 'user' ? 'justify-content-end' : 'justify-content-start'}`}>
+                {message.type === 'bot' && (
+                  <div style={{
+                    background: 'linear-gradient(135deg, #059669, #22c55e)',
+                    borderRadius: '50%',
+                    padding: '6px',
+                    marginRight: '10px',
+                    marginTop: '4px',
+                    minWidth: '32px',
+                    height: '32px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <Bot size={16} className="text-white" />
+                  </div>
+                )}
                 <div
-                  className="p-3 rounded shadow-sm"
+                  className="p-3 rounded-3 shadow-sm"
                   style={{
-                    maxWidth: '75%',
-                    backgroundColor: message.type === 'user' ? '#22c55e' : 'rgba(255,255,255,0.9)',
-                    color: message.type === 'user' ? 'white' : '#374151',
-                    wordBreak: 'break-word'
+                    maxWidth: '80%',
+                    background: message.type === 'user' 
+                      ? 'linear-gradient(135deg, #059669, #22c55e)' 
+                      : 'white',
+                    color: message.type === 'user' ? 'white' : '#1f2937',
+                    wordBreak: 'break-word',
+                    border: message.type === 'bot' ? '1px solid #e2e8f0' : 'none',
+                    boxShadow: message.type === 'bot' ? '0 2px 8px rgba(0,0,0,0.06)' : '0 4px 12px rgba(5, 150, 105, 0.2)'
                   }}
                 >
                   <div className="d-flex align-items-start justify-content-between">
-                    <small className="flex-fill" style={{ lineHeight: '1.5' }}>{message.text}</small>
+                    <span className="flex-fill" style={{ lineHeight: '1.6' }}>{message.text}</span>
                     {message.type === 'bot' && (
                       <button
                         onClick={() => {
@@ -163,40 +221,78 @@ const ChatBot = ({ isOpen, onClose }) => {
                           speechSynthesis.speak(utterance);
                         }}
                         className="btn btn-link p-1 ms-2"
-                        style={{ color: '#6b7280', minWidth: 'auto' }}
-                        title="Read aloud"
+                        style={{ 
+                          color: '#059669', 
+                          minWidth: 'auto',
+                          borderRadius: '50%'
+                        }}
+                        title="🔊 Read aloud"
                       >
-                        <Volume2 size={16} />
+                        <Volume2 size={14} />
                       </button>
                     )}
                   </div>
                 </div>
-                {message.type === 'user' && <User size={20} className="text-muted ms-2 mt-1" />}
+                {message.type === 'user' && (
+                  <div style={{
+                    background: 'linear-gradient(135deg, #6b7280, #4b5563)',
+                    borderRadius: '50%',
+                    padding: '6px',
+                    marginLeft: '10px',
+                    marginTop: '4px',
+                    minWidth: '32px',
+                    height: '32px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <User size={16} className="text-white" />
+                  </div>
+                )}
               </div>
             ))}
 
             {/* Available Questions */}
             {availableQuestions.length > 0 && (
               <div className="mt-4">
+                <div className="text-center mb-3">
+                  <small className="text-muted fw-semibold">💬 Suggested Questions</small>
+                </div>
                 {availableQuestions.map((question, index) => (
                   <button
                     key={index}
                     onClick={() => handleQuestionClick(question)}
-                    className="btn w-100 text-start p-3 mb-2 border rounded"
+                    className="btn w-100 text-start p-3 mb-3 rounded-3"
                     style={{
-                      backgroundColor: 'rgba(255,255,255,0.8)',
-                      transition: 'all 0.2s'
+                      backgroundColor: 'white',
+                      border: '1px solid #e2e8f0',
+                      transition: 'all 0.3s ease',
+                      boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
                     }}
                     onMouseEnter={(e) => {
-                      e.target.style.backgroundColor = 'white';
-                      e.target.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
+                      e.target.style.backgroundColor = '#f8fafc';
+                      e.target.style.boxShadow = '0 4px 12px rgba(5, 150, 105, 0.1)';
+                      e.target.style.borderColor = '#059669';
+                      e.target.style.transform = 'translateY(-1px)';
                     }}
                     onMouseLeave={(e) => {
-                      e.target.style.backgroundColor = 'rgba(255,255,255,0.8)';
-                      e.target.style.boxShadow = 'none';
+                      e.target.style.backgroundColor = 'white';
+                      e.target.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)';
+                      e.target.style.borderColor = '#e2e8f0';
+                      e.target.style.transform = 'translateY(0)';
                     }}
                   >
-                    <small>{question}</small>
+                    <div className="d-flex align-items-center">
+                      <div style={{
+                        width: '6px',
+                        height: '6px',
+                        backgroundColor: '#059669',
+                        borderRadius: '50%',
+                        marginRight: '12px'
+                      }} />
+                      <span className="flex-fill">{question}</span>
+                      <span style={{ color: '#9ca3af', fontSize: '12px' }}>→</span>
+                    </div>
                   </button>
                 ))}
               </div>
@@ -205,7 +301,7 @@ const ChatBot = ({ isOpen, onClose }) => {
         </div>
 
         {/* Input Area */}
-        <div className="p-2 text-center border-top bg-white">
+        <div className="p-4 border-top" style={{ backgroundColor: '#f8fafc' }}>
             {
               isListening && <img src="/recording.gif" alt="" />
             }
