@@ -1,4 +1,4 @@
-import { Bot, User, Volume2 } from "lucide-react";
+import { Bot, User, Volume2, Sun, Moon, Sprout, Wheat, Globe } from "lucide-react";
 import { useState } from "react";
 import schemesData from "../data/schemes.json";
 
@@ -7,6 +7,7 @@ const ChatBot = ({ isOpen, onClose }) => {
   const [currentFlow, setCurrentFlow] = useState('schemes');
   const [selectedScheme, setSelectedScheme] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [theme, setTheme] = useState('light');
 
   const getAvailableQuestions = () => {
     if (currentFlow === 'schemes') {
@@ -64,7 +65,7 @@ const ChatBot = ({ isOpen, onClose }) => {
   const chatbotStyle = {
     width: '100%',
     height: '100vh',
-    backgroundColor: 'white',
+    backgroundColor: theme === 'dark' ? '#1f2937' : 'white',
     borderRadius: '0',
     border: 'none',
     overflow: 'hidden',
@@ -81,7 +82,8 @@ const ChatBot = ({ isOpen, onClose }) => {
   };
 
   const chatAreaStyle = {
-    backgroundImage:" url(../public/bg.jpg)",
+    backgroundImage: theme === 'dark' ? 'none' : 'url(../public/bg.jpg)',
+    backgroundColor: theme === 'dark' ? '#374151' : 'transparent',
     position: 'relative',
     overflowY: 'auto',
     overflowX: 'hidden',
@@ -104,7 +106,7 @@ const ChatBot = ({ isOpen, onClose }) => {
     <>
       <div style={chatbotStyle}>
         {/* Header */}
-        <div style={headerStyle} className="d-flex align-items-center justify-content-center py-2 px-3">
+        <div style={headerStyle} className="d-flex align-items-center justify-content-between py-2 px-3">
           <div className="d-flex align-items-center">
             <div style={{
               background: 'rgba(255,255,255,0.25)',
@@ -115,9 +117,49 @@ const ChatBot = ({ isOpen, onClose }) => {
               <Bot size={16} />
             </div>
             <div>
-              <h6 className="mb-0 fw-bold" style={{ fontSize: '1rem' }}>🌾 AgriBot</h6>
+              <h6 className="mb-0 fw-bold d-flex align-items-center" style={{ fontSize: '1rem' }}>
+                <Wheat size={14} className="me-1" /> AgriBot
+              </h6>
               <small style={{ opacity: 0.9, fontSize: '0.7rem' }}>Agricultural Assistant</small>
             </div>
+          </div>
+          
+          <div className="d-flex align-items-center gap-2">
+            <div className="d-flex align-items-center" style={{
+              background: 'rgba(255,255,255,0.2)',
+              border: '1px solid rgba(255,255,255,0.3)',
+              borderRadius: '8px',
+              padding: '4px 8px',
+              backdropFilter: 'blur(10px)',
+              transition: 'all 0.3s ease'
+            }}>
+              <Globe size={12} className="me-1" style={{ opacity: 0.9 }} />
+              <select className="form-select form-select-sm border-0" style={{
+                background: 'transparent',
+                color: 'white',
+                fontSize: '0.75rem',
+                padding: '0',
+                minWidth: '40px',
+                boxShadow: 'none'
+              }}>
+                <option value="en" style={{ color: '#000' }}>EN</option>
+                <option value="hi" style={{ color: '#000' }}>HI</option>
+              </select>
+            </div>
+            
+            <button 
+              onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+              className="btn p-0" style={{
+              background: 'rgba(255,255,255,0.2)',
+              border: '1px solid rgba(255,255,255,0.3)',
+              borderRadius: '8px',
+              padding: '8px',
+              backdropFilter: 'blur(10px)',
+              transition: 'all 0.3s ease',
+              color: 'white'
+            }}>
+              {theme === 'light' ? <Sun size={14} /> : <Moon size={14} />}
+            </button>
           </div>
         </div>
 
@@ -126,10 +168,10 @@ const ChatBot = ({ isOpen, onClose }) => {
           {/* <div style={dotBackgroundStyle}></div> */}
           <div style={{ position: 'relative', zIndex: 10 }}>
             {messages.length === 0 && (
-              <div className="d-flex align-items-start p-4 mb-4 rounded-4 bg-white"
+              <div className="d-flex align-items-start p-4 mb-4 rounded-4"
                 style={{ 
-                  // backgroundColor: 'white',
-                  border: '1px solid #e1e7ef',
+                  backgroundColor: theme === 'dark' ? '#4b5563' : 'white',
+                  border: theme === 'dark' ? '1px solid #6b7280' : '1px solid #e1e7ef',
                   boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
                   animation: 'fadeInUp 0.6s ease-out 0.2s both'
                 }}>
@@ -149,8 +191,10 @@ const ChatBot = ({ isOpen, onClose }) => {
                   <Bot size={18} className="text-white" />
                 </div>
                 <div>
-                  <div className="fw-bold text-dark mb-2" style={{ fontSize: '1.05rem' }}>Welcome to AgriBot! 👋</div>
-                  <p className="text-muted mb-0" style={{ lineHeight: '1.5', fontSize: '0.9rem' }}>
+                  <div className="fw-bold mb-2 d-flex align-items-center" style={{ fontSize: '1.05rem', color: theme === 'dark' ? '#f9fafb' : '#1f2937' }}>
+                    Welcome to AgriBot! <Sprout size={16} className="ms-1" />
+                  </div>
+                  <p className="mb-0" style={{ lineHeight: '1.5', fontSize: '0.9rem', color: theme === 'dark' ? '#d1d5db' : '#6b7280' }}>
                     I'm here to help you with government schemes for farmers. Select a scheme below to get detailed information.
                   </p>
                 </div>
@@ -183,8 +227,8 @@ const ChatBot = ({ isOpen, onClose }) => {
                     maxWidth: '85%',
                     background: message.type === 'user' 
                       ? '#22c55e' 
-                      : 'white',
-                    color: message.type === 'user' ? 'white' : '#1f2937',
+                      : theme === 'dark' ? '#4b5563' : 'white',
+                    color: message.type === 'user' ? 'white' : theme === 'dark' ? '#f9fafb' : '#1f2937',
                     wordBreak: 'break-word',
                     border: message.type === 'bot' ? '2px solid #dcfce7' : 'none',
                     boxShadow: message.type === 'bot' 
@@ -315,7 +359,9 @@ const ChatBot = ({ isOpen, onClose }) => {
 
         {/* Scrollable Suggested Questions */}
         <div style={{ 
-          background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+          background: theme === 'dark' 
+            ? 'linear-gradient(135deg, #374151 0%, #4b5563 100%)' 
+            : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
           flexShrink: 0,
           maxHeight: '200px',
           overflowY: 'auto',
