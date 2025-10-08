@@ -65,7 +65,7 @@ const ChatBot = ({ isOpen, onClose }) => {
   };
 
   const headerStyle = {
-    background: 'linear-gradient(135deg, #047857 0%, #059669 50%, #10b981 100%)',
+    background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%)',
     color: 'white',
     position: 'relative',
     overflow: 'hidden',
@@ -150,7 +150,7 @@ const ChatBot = ({ isOpen, onClose }) => {
                   animation: 'fadeInUp 0.6s ease-out 0.2s both'
                 }}>
                 <div style={{
-                  background: 'linear-gradient(135deg, #047857, #059669, #10b981)',
+                  background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
                   borderRadius: '50%',
                   padding: '10px',
                   marginRight: '14px',
@@ -159,7 +159,7 @@ const ChatBot = ({ isOpen, onClose }) => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)',
+                  boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)',
                   animation: 'pulse 2s ease-in-out infinite'
                 }}>
                   <Bot size={18} className="text-white" />
@@ -177,38 +177,58 @@ const ChatBot = ({ isOpen, onClose }) => {
               <div key={index} className={`d-flex mb-4 ${message.type === 'user' ? 'justify-content-end' : 'justify-content-start'}`}>
                 {message.type === 'bot' && (
                   <div style={{
-                    background: 'linear-gradient(135deg, #059669, #22c55e)',
+                    background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
                     borderRadius: '50%',
-                    padding: '6px',
-                    marginRight: '10px',
+                    padding: '8px',
+                    marginRight: '12px',
                     marginTop: '4px',
-                    minWidth: '32px',
-                    height: '32px',
+                    minWidth: '36px',
+                    height: '36px',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)',
+                    border: '2px solid rgba(255,255,255,0.2)'
                   }}>
-                    <Bot size={16} className="text-white" />
+                    <Bot size={18} className="text-white" />
                   </div>
                 )}
                 <div
-                  className="p-4 rounded-4 shadow-sm"
+                  className="p-4 rounded-4"
                   style={{
-                    maxWidth: '82%',
+                    maxWidth: '85%',
                     background: message.type === 'user' 
-                      ? 'linear-gradient(135deg, #047857, #059669, #10b981)' 
-                      : 'white',
+                      ? 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%)' 
+                      : 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
                     color: message.type === 'user' ? 'white' : '#1f2937',
                     wordBreak: 'break-word',
-                    border: message.type === 'bot' ? '1px solid #e1e7ef' : 'none',
+                    border: message.type === 'bot' ? '2px solid #e2e8f0' : 'none',
                     boxShadow: message.type === 'bot' 
-                      ? '0 4px 16px rgba(0,0,0,0.04), 0 1px 4px rgba(0,0,0,0.02)' 
-                      : '0 6px 20px rgba(4, 120, 87, 0.25)',
-                    animation: `fadeInUp 0.4s ease-out ${index * 0.1}s both`
+                      ? '0 8px 25px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04)' 
+                      : '0 10px 30px rgba(59, 130, 246, 0.3)',
+                    animation: `fadeInUp 0.4s ease-out ${index * 0.1}s both`,
+                    position: 'relative',
+                    overflow: 'hidden'
                   }}
                 >
+                  {message.type === 'bot' && (
+                    <div style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: '3px',
+                      background: 'linear-gradient(90deg, #3b82f6, #1d4ed8, #3b82f6)',
+                      borderRadius: '20px 20px 0 0'
+                    }} />
+                  )}
                   <div className="d-flex align-items-start justify-content-between">
-                    <span className="flex-fill" style={{ lineHeight: '1.7', fontSize: '0.95rem', whiteSpace: 'pre-line' }}>{message.text}</span>
+                    <span className="flex-fill" style={{ 
+                      lineHeight: '1.8', 
+                      fontSize: '1.1rem', 
+                      whiteSpace: 'pre-line',
+                      fontWeight: message.type === 'user' ? '500' : '400'
+                    }}>{message.text}</span>
                     {message.type === 'bot' && (
                       <button
                         onClick={() => {
@@ -230,18 +250,20 @@ const ChatBot = ({ isOpen, onClose }) => {
                 </div>
                 {message.type === 'user' && (
                   <div style={{
-                    background: 'linear-gradient(135deg, #6b7280, #4b5563)',
+                    background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
                     borderRadius: '50%',
-                    padding: '6px',
-                    marginLeft: '10px',
+                    padding: '8px',
+                    marginLeft: '12px',
                     marginTop: '4px',
-                    minWidth: '32px',
-                    height: '32px',
+                    minWidth: '36px',
+                    height: '36px',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)',
+                    border: '2px solid rgba(255,255,255,0.2)'
                   }}>
-                    <User size={16} className="text-white" />
+                    <User size={18} className="text-white" />
                   </div>
                 )}
               </div>
@@ -250,138 +272,89 @@ const ChatBot = ({ isOpen, onClose }) => {
         </div>
 
         {/* Sticky Suggested Questions */}
-        <div className="border-top" style={{ 
-          borderTop: '1px solid #e2e8f0',
+        <div style={{ 
+          background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
           flexShrink: 0,
-          maxHeight: '250px',
-          overflowY: 'auto'
+          maxHeight: '300px',
+          overflowY: 'auto',
+          borderTop: '3px solid #3b82f6'
         }}>
-          <div className="p-3">
-            <div className="d-flex align-items-center justify-content-between mb-3">
-              <div className="d-flex align-items-center">
-                <div style={{
-                  width: '36px',
-                  height: '36px',
-                  background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
-                  borderRadius: '10px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginRight: '14px',
-                  boxShadow: '0 6px 20px rgba(59, 130, 246, 0.25)'
-                }}>
-                  <span style={{ fontSize: '16px' }}>
-                    {currentFlow === 'schemes' ? '🏛️' : '📋'}
-                  </span>
-                </div>
-                <div>
-                  <div className="fw-bold" style={{ color: '#1e293b', fontSize: '1.1rem', letterSpacing: '-0.01em' }}>
-                    {currentFlow === 'schemes' ? 'Available Schemes' : selectedScheme?.name}
-                  </div>
-                  <small style={{ color: '#64748b', fontSize: '0.85rem', fontWeight: '500' }}>
-                    {currentFlow === 'schemes' ? 'Tap to explore details' : 'Select a question below'}
-                  </small>
-                </div>
+          <div className="p-4">
+            <div className="text-center mb-4">
+              <div style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+                borderRadius: '25px',
+                padding: '12px 24px',
+                boxShadow: '0 8px 25px rgba(59, 130, 246, 0.3)',
+                marginBottom: '8px'
+              }}>
+                <span style={{ fontSize: '20px', marginRight: '10px' }}>
+                  {currentFlow === 'schemes' ? '🏛️' : '📋'}
+                </span>
+                <span className="fw-bold text-white" style={{ fontSize: '1.2rem' }}>
+                  {currentFlow === 'schemes' ? 'Government Schemes' : selectedScheme?.name}
+                </span>
               </div>
               {currentFlow !== 'schemes' && (
-                <button 
-                  onClick={handleBackToSchemes}
-                  className="btn btn-sm"
-                  style={{
-                    background: 'linear-gradient(135deg, #6b7280, #4b5563)',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '20px',
-                    fontSize: '0.8rem',
-                    padding: '0.5rem 1rem',
-                    fontWeight: '500',
-                    boxShadow: '0 2px 8px rgba(107, 114, 128, 0.3)',
-                    transition: 'all 0.2s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.transform = 'scale(1.05)';
-                    e.target.style.boxShadow = '0 4px 12px rgba(107, 114, 128, 0.4)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.transform = 'scale(1)';
-                    e.target.style.boxShadow = '0 2px 8px rgba(107, 114, 128, 0.3)';
-                  }}
-                >
-                  ← Back to Schemes
-                </button>
+                <div className="mt-2">
+                  <button 
+                    onClick={handleBackToSchemes}
+                    className="btn"
+                    style={{
+                      background: 'linear-gradient(135deg, #6b7280, #4b5563)',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '20px',
+                      fontSize: '0.9rem',
+                      padding: '8px 20px',
+                      fontWeight: '500',
+                      boxShadow: '0 4px 15px rgba(107, 114, 128, 0.3)'
+                    }}
+                  >
+                    ← Back to All Schemes
+                  </button>
+                </div>
               )}
             </div>
             
-            <div className="row g-2">
+            <div className="d-flex flex-wrap justify-content-center gap-3">
               {getAvailableQuestions().map((item, index) => (
-                <div key={index} className="col-12">
-                  <button
-                    onClick={() => handleQuestionClick(item)}
-                    className="btn w-100 text-start p-3 rounded-4"
-                    style={{
-                      background: 'linear-gradient(135deg, #ffffff 0%, #fefefe 100%)',
-                      border: '2px solid #e2e8f0',
-                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                      boxShadow: 'none',
-                      fontSize: '0.95rem',
-                      fontWeight: '500',
-                      position: 'relative',
-                      overflow: 'hidden',
-                      animation: `fadeInUp 0.4s ease-out ${index * 0.1}s both`
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.background = '#f8fafc';
-                      e.target.style.borderColor = '#3b82f6';
-                      e.target.style.transform = 'translateY(-2px) scale(1.01)';
-                      e.target.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.15)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.background = 'white';
-                      e.target.style.borderColor = '#e2e8f0';
-                      e.target.style.transform = 'translateY(0) scale(1)';
-                      e.target.style.boxShadow = 'none';
-                    }}
-                  >
-                    <div className="d-flex align-items-center">
-                      <div style={{
-                        width: '8px',
-                        height: '8px',
-                        background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
-                        borderRadius: '50%',
-                        marginRight: '12px',
-                        boxShadow: '0 2px 6px rgba(59, 130, 246, 0.4)'
-                      }} />
-                      <span className="flex-fill" style={{ color: '#1e293b', lineHeight: '1.6', fontWeight: '500' }}>
-                        {item.text}
-                      </span>
-                      <div style={{
-                        width: '24px',
-                        height: '24px',
-                        background: 'linear-gradient(135deg, #f1f5f9, #e2e8f0)',
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        marginLeft: '8px',
-                        transition: 'all 0.2s ease'
-                      }}>
-                        <span style={{ color: '#64748b', fontSize: '11px', fontWeight: '600' }}>→</span>
-                      </div>
-                    </div>
-                    
-                    {/* Subtle gradient overlay */}
-                    <div style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      height: '2px',
-                      background: 'linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.3), transparent)',
-                      opacity: 0,
-                      transition: 'opacity 0.3s ease'
-                    }} className="hover-gradient" />
-                  </button>
-                </div>
+                <button
+                  key={index}
+                  onClick={() => handleQuestionClick(item)}
+                  className="btn"
+                  style={{
+                    background: 'linear-gradient(135deg, #ffffff, #f8fafc)',
+                    border: '2px solid #e2e8f0',
+                    borderRadius: '20px',
+                    padding: '12px 20px',
+                    fontSize: '1rem',
+                    fontWeight: '500',
+                    color: '#1e293b',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.08)',
+                    transition: 'all 0.3s ease',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    minWidth: 'fit-content',
+                    maxWidth: '300px'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.background = 'linear-gradient(135deg, #3b82f6, #1d4ed8)';
+                    e.target.style.color = 'white';
+                    e.target.style.transform = 'translateY(-3px)';
+                    e.target.style.boxShadow = '0 8px 25px rgba(59, 130, 246, 0.3)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = 'linear-gradient(135deg, #ffffff, #f8fafc)';
+                    e.target.style.color = '#1e293b';
+                    e.target.style.transform = 'translateY(0)';
+                    e.target.style.boxShadow = '0 4px 15px rgba(0,0,0,0.08)';
+                  }}
+                >
+                  {item.text}
+                </button>
               ))}
             </div>
           </div>
