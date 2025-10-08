@@ -244,7 +244,7 @@ const ChatBot = ({ isOpen, onClose }) => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    boxShadow: '0 4px 15px rgba(22, 163, 74, 0.4)',
+                    boxShadow: '0 4px 15px rgba(115, 120, 117, 0.4)',
                     border: '2px solid rgba(255,255,255,0.2)'
                   }}>
                     <User size={18} className="text-white" />
