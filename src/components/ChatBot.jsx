@@ -73,7 +73,7 @@ const ChatBot = ({ isOpen, onClose }) => {
   };
 
   const chatAreaStyle = {
-    background: 'linear-gradient(135deg, #fafbfc 0%, #f4f6f8 100%)',
+    backgroundImage:" url(../public/bg.jpg)",
     position: 'relative',
     overflowY: 'auto',
     overflowX: 'hidden',
@@ -139,10 +139,10 @@ const ChatBot = ({ isOpen, onClose }) => {
 
         {/* Chat Messages */}
         <div style={chatAreaStyle} className="chatbot p-4">
-          <div style={dotBackgroundStyle}></div>
+          {/* <div style={dotBackgroundStyle}></div> */}
           <div style={{ position: 'relative', zIndex: 10 }}>
             {messages.length === 0 && (
-              <div className="d-flex align-items-start p-4 mb-4 rounded-4"
+              <div className="d-flex align-items-start p-4 mb-4 rounded-4 bg-white"
                 style={{ 
                   // backgroundColor: 'white',
                   border: '1px solid #e1e7ef',
@@ -251,37 +251,35 @@ const ChatBot = ({ isOpen, onClose }) => {
 
         {/* Sticky Suggested Questions */}
         <div className="border-top" style={{ 
-          background: 'linear-gradient(135deg, #f8fafc 0%, #f0fdf4 50%, #ecfdf5 100%)',
-          borderTop: '2px solid #d1fae5',
+          borderTop: '1px solid #e2e8f0',
           flexShrink: 0,
           maxHeight: '250px',
-          overflowY: 'auto',
-          boxShadow: '0 -4px 20px rgba(0,0,0,0.08)'
+          overflowY: 'auto'
         }}>
-          <div className="p-4">
-            <div className="d-flex align-items-center justify-content-between mb-4">
+          <div className="p-3">
+            <div className="d-flex align-items-center justify-content-between mb-3">
               <div className="d-flex align-items-center">
                 <div style={{
-                  width: '32px',
-                  height: '32px',
-                  background: 'linear-gradient(135deg, #22c55e, #16a34a)',
-                  borderRadius: '8px',
+                  width: '36px',
+                  height: '36px',
+                  background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+                  borderRadius: '10px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  marginRight: '12px',
-                  boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)'
+                  marginRight: '14px',
+                  boxShadow: '0 6px 20px rgba(59, 130, 246, 0.25)'
                 }}>
-                  <span style={{ fontSize: '14px' }}>
+                  <span style={{ fontSize: '16px' }}>
                     {currentFlow === 'schemes' ? '🏛️' : '📋'}
                   </span>
                 </div>
                 <div>
-                  <div className="fw-bold" style={{ color: '#1e293b', fontSize: '1rem' }}>
-                    {currentFlow === 'schemes' ? 'Government Schemes' : selectedScheme?.name}
+                  <div className="fw-bold" style={{ color: '#1e293b', fontSize: '1.1rem', letterSpacing: '-0.01em' }}>
+                    {currentFlow === 'schemes' ? 'Available Schemes' : selectedScheme?.name}
                   </div>
-                  <small className="text-muted">
-                    {currentFlow === 'schemes' ? 'Select a scheme to explore' : 'Choose a question to learn more'}
+                  <small style={{ color: '#64748b', fontSize: '0.85rem', fontWeight: '500' }}>
+                    {currentFlow === 'schemes' ? 'Tap to explore details' : 'Select a question below'}
                   </small>
                 </div>
               </div>
@@ -314,17 +312,17 @@ const ChatBot = ({ isOpen, onClose }) => {
               )}
             </div>
             
-            <div className="row g-3">
+            <div className="row g-2">
               {getAvailableQuestions().map((item, index) => (
                 <div key={index} className="col-12">
                   <button
                     onClick={() => handleQuestionClick(item)}
-                    className="btn w-100 text-start p-4 rounded-4"
+                    className="btn w-100 text-start p-3 rounded-4"
                     style={{
                       background: 'linear-gradient(135deg, #ffffff 0%, #fefefe 100%)',
                       border: '2px solid #e2e8f0',
                       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                      boxShadow: '0 4px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)',
+                      boxShadow: 'none',
                       fontSize: '0.95rem',
                       fontWeight: '500',
                       position: 'relative',
@@ -332,43 +330,42 @@ const ChatBot = ({ isOpen, onClose }) => {
                       animation: `fadeInUp 0.4s ease-out ${index * 0.1}s both`
                     }}
                     onMouseEnter={(e) => {
-                      e.target.style.background = 'linear-gradient(135deg, #f0fdf4, #dcfce7)';
-                      e.target.style.borderColor = '#22c55e';
-                      e.target.style.transform = 'translateY(-3px) scale(1.02)';
-                      e.target.style.boxShadow = '0 12px 30px rgba(34, 197, 94, 0.15), 0 4px 12px rgba(0,0,0,0.08)';
+                      e.target.style.background = '#f8fafc';
+                      e.target.style.borderColor = '#3b82f6';
+                      e.target.style.transform = 'translateY(-2px) scale(1.01)';
+                      e.target.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.15)';
                     }}
                     onMouseLeave={(e) => {
-                      e.target.style.background = 'linear-gradient(135deg, #ffffff 0%, #fefefe 100%)';
+                      e.target.style.background = 'white';
                       e.target.style.borderColor = '#e2e8f0';
                       e.target.style.transform = 'translateY(0) scale(1)';
-                      e.target.style.boxShadow = '0 4px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)';
+                      e.target.style.boxShadow = 'none';
                     }}
                   >
                     <div className="d-flex align-items-center">
                       <div style={{
-                        width: '12px',
-                        height: '12px',
-                        background: 'linear-gradient(135deg, #22c55e, #16a34a)',
+                        width: '8px',
+                        height: '8px',
+                        background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
                         borderRadius: '50%',
-                        marginRight: '16px',
-                        boxShadow: '0 2px 6px rgba(34, 197, 94, 0.4)',
-                        animation: 'pulse 2s ease-in-out infinite'
+                        marginRight: '12px',
+                        boxShadow: '0 2px 6px rgba(59, 130, 246, 0.4)'
                       }} />
-                      <span className="flex-fill" style={{ color: '#1e293b', lineHeight: '1.5' }}>
+                      <span className="flex-fill" style={{ color: '#1e293b', lineHeight: '1.6', fontWeight: '500' }}>
                         {item.text}
                       </span>
                       <div style={{
-                        width: '28px',
-                        height: '28px',
+                        width: '24px',
+                        height: '24px',
                         background: 'linear-gradient(135deg, #f1f5f9, #e2e8f0)',
                         borderRadius: '50%',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        marginLeft: '12px',
+                        marginLeft: '8px',
                         transition: 'all 0.2s ease'
                       }}>
-                        <span style={{ color: '#64748b', fontSize: '12px', fontWeight: '600' }}>→</span>
+                        <span style={{ color: '#64748b', fontSize: '11px', fontWeight: '600' }}>→</span>
                       </div>
                     </div>
                     

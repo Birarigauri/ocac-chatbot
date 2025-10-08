@@ -36,9 +36,12 @@
   color: #888;
 }
 
-.chatbot{
+/* .chatbot{
   background-image: url(../public/bg.jpg)!important;
   background-repeat: no-repeat!important;
   background-size: cover!important;
-  background-attachment: fixed;
-}
+  background-attachment: fixed!important;
+  background-position: center!important;
+  min-height: 100vh!important;
+  height: 100%!important;
+} */
