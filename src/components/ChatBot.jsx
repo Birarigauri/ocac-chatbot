@@ -1,90 +1,56 @@
-import { X, Bot, User, Volume2, Send, Mic, MicOff, Paperclip } from "lucide-react";
-import { useState, useRef } from "react";
+import { Bot, User, Volume2 } from "lucide-react";
+import { useState } from "react";
+import schemesData from "../data/schemes.json";
 
 const ChatBot = ({ isOpen, onClose }) => {
   const [messages, setMessages] = useState([]);
-  const [askedQuestions, setAskedQuestions] = useState([]);
-  const [inputText, setInputText] = useState('');
-  const [isListening, setIsListening] = useState(false);
-  const recognitionRef = useRef(null);
-  const fileInputRef = useRef(null);
+  const [currentFlow, setCurrentFlow] = useState('schemes');
+  const [selectedScheme, setSelectedScheme] = useState(null);
 
-  const questions = [
-    "What crops grow best in my region?",
-    "How can I improve soil health naturally?",
-    "What's the best time to plant this season?",
-    "How do I manage pests naturally?"
-  ];
-
-  const answers = {
-    "What crops grow best in my region?": "For optimal crop selection, consider your local climate zone, soil type, and rainfall patterns. Common high-yield crops include wheat, corn, soybeans, and rice depending on your region. Consult your local agricultural extension office for region-specific recommendations.",
-    "How can I improve soil health naturally?": "Improve soil health through crop rotation, cover cropping, composting, and reduced tillage. Add organic matter like compost or manure, test soil pH regularly, and avoid overuse of chemical fertilizers.",
-    "What's the best time to plant this season?": "Planting times depend on your crop type and local frost dates. Cool-season crops can be planted 2-4 weeks before the last frost, while warm-season crops should be planted after the last frost date.",
-    "How do I manage pests naturally?": "Use integrated pest management: encourage beneficial insects, practice crop rotation, use companion planting, and apply organic pesticides only when necessary. Regular monitoring is key."
-  };
-
-  const availableQuestions = questions.filter(q => !askedQuestions.includes(q));
-
-  const handleQuestionClick = (question) => {
-    setMessages(prev => [
-      ...prev,
-      { type: 'user', text: question },
-      { type: 'bot', text: answers[question] }
-    ]);
-    setAskedQuestions(prev => [...prev, question]);
-  };
-
-  const handleSendMessage = () => {
-    if (!inputText.trim()) return;
-    
-    const response = answers[inputText] || "I'm sorry, I don't have information about that specific question. Please try one of the suggested questions or rephrase your query.";
-    
-    setMessages(prev => [
-      ...prev,
-      { type: 'user', text: inputText },
-      { type: 'bot', text: response }
-    ]);
-    setInputText('');
-  };
-
-  const startListening = () => {
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognitionRef.current = new SpeechRecognition();
-      recognitionRef.current.continuous = false;
-      recognitionRef.current.interimResults = false;
-      recognitionRef.current.lang = 'en-US';
-      
-      recognitionRef.current.onstart = () => setIsListening(true);
-      recognitionRef.current.onend = () => setIsListening(false);
-      
-      recognitionRef.current.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        setInputText(transcript);
-      };
-      
-      recognitionRef.current.start();
+  const getAvailableQuestions = () => {
+    if (currentFlow === 'schemes') {
+      return schemesData.schemes.map(scheme => ({
+        text: scheme.name,
+        type: 'scheme',
+        data: scheme
+      }));
+    } else if (selectedScheme) {
+      return selectedScheme.questions.map(question => ({
+        text: question,
+        type: 'question',
+        data: question
+      }));
     }
+    return [];
   };
 
-  const stopListening = () => {
-    if (recognitionRef.current) {
-      recognitionRef.current.stop();
-    }
-  };
-
-  const handleFileSelect = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const fileName = file.name;
-      const fileSize = (file.size / 1024).toFixed(1) + ' KB';
-      
+  const handleQuestionClick = (item) => {
+    if (item.type === 'scheme') {
       setMessages(prev => [
         ...prev,
-        { type: 'user', text: `📎 Uploaded: ${fileName} (${fileSize})` },
-        { type: 'bot', text: `I've received your file "${fileName}". I can help analyze agricultural documents, images of crops, or soil reports. What would you like to know about this file?` }
+        { type: 'user', text: item.text },
+        { type: 'bot', text: `Great! You've selected ${item.data.name}. ${item.data.description}. Here are some questions I can help you with:` }
+      ]);
+      setSelectedScheme(item.data);
+      setCurrentFlow(item.data.id);
+    } else if (item.type === 'question') {
+      const answer = selectedScheme.answers[item.data];
+      setMessages(prev => [
+        ...prev,
+        { type: 'user', text: item.text },
+        { type: 'bot', text: answer }
       ]);
     }
+  };
+
+  const handleBackToSchemes = () => {
+    setMessages(prev => [
+      ...prev,
+      { type: 'user', text: 'Show all schemes' },
+      { type: 'bot', text: 'Here are all available government schemes for farmers:' }
+    ]);
+    setCurrentFlow('schemes');
+    setSelectedScheme(null);
   };
 
   const chatbotStyle = {
@@ -131,7 +97,6 @@ const ChatBot = ({ isOpen, onClose }) => {
       <div style={chatbotStyle}>
         {/* Header */}
         <div style={headerStyle} className="d-flex align-items-center justify-content-between p-4">
-          {/* Decorative background elements */}
           <div style={{
             position: 'absolute',
             top: '-50%',
@@ -166,7 +131,7 @@ const ChatBot = ({ isOpen, onClose }) => {
             </div>
             <div>
               <h5 className="mb-0 fw-bold" style={{ fontSize: '1.1rem' }}>🌾 AgriBot</h5>
-              <small style={{ opacity: 0.9, fontSize: '0.8rem' }}>Your Smart Farming Assistant</small>
+              <small style={{ opacity: 0.9, fontSize: '0.8rem' }}>Government Schemes Assistant</small>
             </div>
           </div>
           <div style={{ width: '40px' }}></div>
@@ -179,7 +144,7 @@ const ChatBot = ({ isOpen, onClose }) => {
             {messages.length === 0 && (
               <div className="d-flex align-items-start p-4 mb-4 rounded-4"
                 style={{ 
-                  backgroundColor: 'white',
+                  // backgroundColor: 'white',
                   border: '1px solid #e1e7ef',
                   boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
                   animation: 'fadeInUp 0.6s ease-out 0.2s both'
@@ -202,7 +167,7 @@ const ChatBot = ({ isOpen, onClose }) => {
                 <div>
                   <div className="fw-bold text-dark mb-2" style={{ fontSize: '1.05rem' }}>Welcome to AgriBot! 👋</div>
                   <p className="text-muted mb-0" style={{ lineHeight: '1.5', fontSize: '0.9rem' }}>
-                    I'm your intelligent farming companion. Ask me anything about crops, soil, weather, or upload documents for analysis.
+                    I'm here to help you with government schemes for farmers. Select a scheme below to get detailed information.
                   </p>
                 </div>
               </div>
@@ -243,7 +208,7 @@ const ChatBot = ({ isOpen, onClose }) => {
                   }}
                 >
                   <div className="d-flex align-items-start justify-content-between">
-                    <span className="flex-fill" style={{ lineHeight: '1.7', fontSize: '0.95rem' }}>{message.text}</span>
+                    <span className="flex-fill" style={{ lineHeight: '1.7', fontSize: '0.95rem', whiteSpace: 'pre-line' }}>{message.text}</span>
                     {message.type === 'bot' && (
                       <button
                         onClick={() => {
@@ -281,211 +246,148 @@ const ChatBot = ({ isOpen, onClose }) => {
                 )}
               </div>
             ))}
+          </div>
+        </div>
 
-            {/* Available Questions */}
-            {availableQuestions.length > 0 && (
-              <div className="mt-4">
-                <div className="text-center mb-3">
-                  <small className="text-muted fw-semibold">💬 Suggested Questions</small>
+        {/* Sticky Suggested Questions */}
+        <div className="border-top" style={{ 
+          background: 'linear-gradient(135deg, #f8fafc 0%, #f0fdf4 50%, #ecfdf5 100%)',
+          borderTop: '2px solid #d1fae5',
+          flexShrink: 0,
+          maxHeight: '250px',
+          overflowY: 'auto',
+          boxShadow: '0 -4px 20px rgba(0,0,0,0.08)'
+        }}>
+          <div className="p-4">
+            <div className="d-flex align-items-center justify-content-between mb-4">
+              <div className="d-flex align-items-center">
+                <div style={{
+                  width: '32px',
+                  height: '32px',
+                  background: 'linear-gradient(135deg, #22c55e, #16a34a)',
+                  borderRadius: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginRight: '12px',
+                  boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)'
+                }}>
+                  <span style={{ fontSize: '14px' }}>
+                    {currentFlow === 'schemes' ? '🏛️' : '📋'}
+                  </span>
                 </div>
-                {availableQuestions.map((question, index) => (
+                <div>
+                  <div className="fw-bold" style={{ color: '#1e293b', fontSize: '1rem' }}>
+                    {currentFlow === 'schemes' ? 'Government Schemes' : selectedScheme?.name}
+                  </div>
+                  <small className="text-muted">
+                    {currentFlow === 'schemes' ? 'Select a scheme to explore' : 'Choose a question to learn more'}
+                  </small>
+                </div>
+              </div>
+              {currentFlow !== 'schemes' && (
+                <button 
+                  onClick={handleBackToSchemes}
+                  className="btn btn-sm"
+                  style={{
+                    background: 'linear-gradient(135deg, #6b7280, #4b5563)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '20px',
+                    fontSize: '0.8rem',
+                    padding: '0.5rem 1rem',
+                    fontWeight: '500',
+                    boxShadow: '0 2px 8px rgba(107, 114, 128, 0.3)',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.transform = 'scale(1.05)';
+                    e.target.style.boxShadow = '0 4px 12px rgba(107, 114, 128, 0.4)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.transform = 'scale(1)';
+                    e.target.style.boxShadow = '0 2px 8px rgba(107, 114, 128, 0.3)';
+                  }}
+                >
+                  ← Back to Schemes
+                </button>
+              )}
+            </div>
+            
+            <div className="row g-3">
+              {getAvailableQuestions().map((item, index) => (
+                <div key={index} className="col-12">
                   <button
-                    key={index}
-                    onClick={() => handleQuestionClick(question)}
-                    className="btn w-100 text-start p-4 mb-3 rounded-4"
+                    onClick={() => handleQuestionClick(item)}
+                    className="btn w-100 text-start p-4 rounded-4"
                     style={{
-                      backgroundColor: 'white',
-                      border: '1px solid #e1e7ef',
+                      background: 'linear-gradient(135deg, #ffffff 0%, #fefefe 100%)',
+                      border: '2px solid #e2e8f0',
                       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-                      animation: `fadeInUp 0.5s ease-out ${index * 0.1 + 0.3}s both`
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)',
+                      fontSize: '0.95rem',
+                      fontWeight: '500',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      animation: `fadeInUp 0.4s ease-out ${index * 0.1}s both`
                     }}
                     onMouseEnter={(e) => {
-                      e.target.style.backgroundColor = '#f8fffe';
-                      e.target.style.boxShadow = '0 8px 25px rgba(4, 120, 87, 0.12)';
-                      e.target.style.borderColor = '#047857';
-                      e.target.style.transform = 'translateY(-2px) scale(1.01)';
+                      e.target.style.background = 'linear-gradient(135deg, #f0fdf4, #dcfce7)';
+                      e.target.style.borderColor = '#22c55e';
+                      e.target.style.transform = 'translateY(-3px) scale(1.02)';
+                      e.target.style.boxShadow = '0 12px 30px rgba(34, 197, 94, 0.15), 0 4px 12px rgba(0,0,0,0.08)';
                     }}
                     onMouseLeave={(e) => {
-                      e.target.style.backgroundColor = 'white';
-                      e.target.style.boxShadow = '0 2px 8px rgba(0,0,0,0.04)';
-                      e.target.style.borderColor = '#e1e7ef';
+                      e.target.style.background = 'linear-gradient(135deg, #ffffff 0%, #fefefe 100%)';
+                      e.target.style.borderColor = '#e2e8f0';
                       e.target.style.transform = 'translateY(0) scale(1)';
+                      e.target.style.boxShadow = '0 4px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)';
                     }}
                   >
                     <div className="d-flex align-items-center">
                       <div style={{
-                        width: '8px',
-                        height: '8px',
-                        background: 'linear-gradient(135deg, #047857, #10b981)',
+                        width: '12px',
+                        height: '12px',
+                        background: 'linear-gradient(135deg, #22c55e, #16a34a)',
                         borderRadius: '50%',
-                        marginRight: '14px',
-                        boxShadow: '0 2px 4px rgba(4, 120, 87, 0.3)'
+                        marginRight: '16px',
+                        boxShadow: '0 2px 6px rgba(34, 197, 94, 0.4)',
+                        animation: 'pulse 2s ease-in-out infinite'
                       }} />
-                      <span className="flex-fill">{question}</span>
-                      <span style={{ color: '#9ca3af', fontSize: '12px' }}>→</span>
+                      <span className="flex-fill" style={{ color: '#1e293b', lineHeight: '1.5' }}>
+                        {item.text}
+                      </span>
+                      <div style={{
+                        width: '28px',
+                        height: '28px',
+                        background: 'linear-gradient(135deg, #f1f5f9, #e2e8f0)',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginLeft: '12px',
+                        transition: 'all 0.2s ease'
+                      }}>
+                        <span style={{ color: '#64748b', fontSize: '12px', fontWeight: '600' }}>→</span>
+                      </div>
                     </div>
+                    
+                    {/* Subtle gradient overlay */}
+                    <div style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: '2px',
+                      background: 'linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.3), transparent)',
+                      opacity: 0,
+                      transition: 'opacity 0.3s ease'
+                    }} className="hover-gradient" />
                   </button>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Input Area */}
-        <div className="p-4 border-top" style={{ 
-          background: 'linear-gradient(135deg, #ffffff 0%, #f8fffe 50%, #f0fdf4 100%)',
-          borderTop: '1px solid #d1fae5',
-          backdropFilter: 'blur(10px)',
-          flexShrink: 0
-        }}>
-          {isListening && (
-            <div className="text-center mb-3">
-              <img src="/recording.gif" className="mb-2" alt="Recording" style={{
-                width: '40px',
-                height: '40px',
-                filter: 'drop-shadow(0 4px 8px rgba(4, 120, 87, 0.3))'
-              }} />
-              <div style={{
-                color: '#047857',
-                fontSize: '0.85rem',
-                fontWeight: '600',
-                animation: 'pulse 1.5s ease-in-out infinite'
-              }}>🎤 Listening...</div>
-            </div>
-          )}
-          
-          <div className="position-relative mb-3">
-            <div className="d-flex align-items-center" style={{
-              background: 'white',
-              borderRadius: '30px',
-              padding: '4px',
-              boxShadow: '0 8px 32px rgba(4, 120, 87, 0.08), 0 2px 8px rgba(0,0,0,0.04)',
-              border: '2px solid transparent',
-              backgroundImage: 'linear-gradient(white, white), linear-gradient(135deg, #10b981, #047857)',
-              backgroundOrigin: 'border-box',
-              backgroundClip: 'padding-box, border-box',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-            }}>
-              <input
-                type="text"
-                className="form-control border-0"
-                placeholder="💬 Ask me anything about farming..."
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                style={{ 
-                  borderRadius: '26px',
-                  padding: '16px 24px',
-                  fontSize: '0.95rem',
-                  fontWeight: '500',
-                  backgroundColor: 'transparent',
-                  boxShadow: 'none',
-                  outline: 'none',
-                  color: '#1f2937'
-                }}
-              />
-              
-              <div className="d-flex gap-1 pe-2">
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleFileSelect}
-                  style={{ display: 'none' }}
-                  accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif"
-                />
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="btn rounded-circle p-0"
-                  style={{ 
-                    width: '44px', 
-                    height: '44px',
-                    background: 'linear-gradient(135deg, #f3f4f6, #e5e7eb)',
-                    border: 'none',
-                    color: '#6b7280',
-                    transition: 'all 0.2s ease',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.background = 'linear-gradient(135deg, #e5e7eb, #d1d5db)';
-                    e.target.style.transform = 'scale(1.05)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.background = 'linear-gradient(135deg, #f3f4f6, #e5e7eb)';
-                    e.target.style.transform = 'scale(1)';
-                  }}
-                  title="📎 Upload file"
-                >
-                  <Paperclip size={18} />
-                </button>
-                
-                <button
-                  onClick={isListening ? stopListening : startListening}
-                  className="btn rounded-circle p-0"
-                  style={{ 
-                    width: '44px', 
-                    height: '44px',
-                    background: isListening 
-                      ? 'linear-gradient(135deg, #ef4444, #dc2626)' 
-                      : 'linear-gradient(135deg, #3b82f6, #2563eb)',
-                    border: 'none',
-                    color: 'white',
-                    transition: 'all 0.2s ease',
-                    animation: isListening ? 'pulse 1s ease-in-out infinite' : 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: isListening 
-                      ? '0 4px 16px rgba(239, 68, 68, 0.4)' 
-                      : '0 4px 16px rgba(59, 130, 246, 0.3)'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.transform = 'scale(1.05)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.transform = 'scale(1)';
-                  }}
-                  title={isListening ? '🛑 Stop listening' : '🎤 Start voice input'}
-                >
-                  {isListening ? <MicOff size={18} /> : <Mic size={18} />}
-                </button>
-                
-                <button
-                  onClick={handleSendMessage}
-                  className="btn rounded-circle p-0"
-                  style={{ 
-                    width: '44px', 
-                    height: '44px',
-                    background: 'linear-gradient(135deg, #10b981, #047857)',
-                    border: 'none',
-                    color: 'white',
-                    transition: 'all 0.2s ease',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: '0 4px 16px rgba(16, 185, 129, 0.4)'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.background = 'linear-gradient(135deg, #059669, #065f46)';
-                    e.target.style.transform = 'scale(1.05)';
-                    e.target.style.boxShadow = '0 6px 20px rgba(16, 185, 129, 0.5)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.background = 'linear-gradient(135deg, #10b981, #047857)';
-                    e.target.style.transform = 'scale(1)';
-                    e.target.style.boxShadow = '0 4px 16px rgba(16, 185, 129, 0.4)';
-                  }}
-                  title="🚀 Send message"
-                >
-                  <Send size={18} />
-                </button>
-              </div>
+                </div>
+              ))}
             </div>
           </div>
-          
-
         </div>
       </div>
 
@@ -494,20 +396,6 @@ const ChatBot = ({ isOpen, onClose }) => {
           0%, 100% { transform: translateY(0px) translateX(0px); }
           33% { transform: translateY(-10px) translateX(5px); }
           66% { transform: translateY(5px) translateX(-3px); }
-        }
-        @keyframes wave {
-          0% { transform: scale(1) rotate(-5deg); }
-          100% { transform: scale(1.1) rotate(5deg); }
-        }
-        @keyframes slideInUp {
-          from { 
-            opacity: 0; 
-            transform: translateY(30px) scale(0.95); 
-          }
-          to { 
-            opacity: 1; 
-            transform: translateY(0) scale(1); 
-          }
         }
         @keyframes fadeInUp {
           from { 
@@ -528,6 +416,9 @@ const ChatBot = ({ isOpen, onClose }) => {
             transform: scale(1.05); 
             opacity: 0.9; 
           }
+        }
+        .btn:hover .hover-gradient {
+          opacity: 1 !important;
         }
       `}</style>
     </>

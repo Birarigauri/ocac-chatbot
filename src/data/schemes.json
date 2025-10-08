@@ -1,0 +1,80 @@
+{
+  "schemes": [
+    {
+      "id": "pm-kisan",
+      "name": "PM-KISAN Scheme",
+      "description": "Direct income support to farmers",
+      "questions": [
+        "What is PM-KISAN scheme?",
+        "What are the benefits?",
+        "Required documents",
+        "How to apply?",
+        "Eligibility criteria"
+      ],
+      "answers": {
+        "What is PM-KISAN scheme?": "PM-KISAN is a Central Sector Scheme that provides income support of ₹6,000 per year to all landholding farmer families across the country in three equal installments of ₹2,000 each every four months.",
+        "What are the benefits?": "• Direct cash transfer of ₹6,000 per year\n• No intermediaries involved\n• Money directly credited to bank account\n• Helps in meeting agricultural expenses\n• Covers all landholding farmers",
+        "Required documents": "• Aadhaar Card\n• Bank Account Details\n• Land Records (Khata/Khatauni)\n• Mobile Number\n• Passport Size Photo",
+        "How to apply?": "1. Visit PM-KISAN portal (pmkisan.gov.in)\n2. Click on 'New Farmer Registration'\n3. Enter Aadhaar number and mobile\n4. Fill required details\n5. Upload documents\n6. Submit application",
+        "Eligibility criteria": "• Must be a landholding farmer\n• Should have cultivable land\n• Aadhaar card is mandatory\n• Valid bank account required\n• Excludes institutional landholders"
+      }
+    },
+    {
+      "id": "crop-insurance",
+      "name": "Pradhan Mantri Fasal Bima Yojana",
+      "description": "Crop insurance scheme for farmers",
+      "questions": [
+        "What is crop insurance?",
+        "Coverage and benefits",
+        "Premium rates",
+        "How to enroll?",
+        "Claim process"
+      ],
+      "answers": {
+        "What is crop insurance?": "Pradhan Mantri Fasal Bima Yojana (PMFBY) provides insurance coverage and financial support to farmers in case of crop failure due to natural calamities, pests, and diseases.",
+        "Coverage and benefits": "• Covers all food crops, oilseeds, and annual commercial/horticultural crops\n• Protection against natural disasters\n• Coverage for post-harvest losses\n• Technology-based claim settlement\n• Affordable premium rates",
+        "Premium rates": "• Kharif crops: 2% of sum insured\n• Rabi crops: 1.5% of sum insured\n• Annual commercial/horticultural crops: 5% of sum insured\n• Government provides subsidy on premium",
+        "How to enroll?": "1. Visit nearest bank or insurance company\n2. Fill application form\n3. Provide land records and Aadhaar\n4. Pay premium amount\n5. Get insurance certificate",
+        "Claim process": "1. Report crop loss within 72 hours\n2. Insurance company conducts survey\n3. Assessment of crop damage\n4. Claim settlement within 60 days\n5. Amount credited to bank account"
+      }
+    },
+    {
+      "id": "soil-health",
+      "name": "Soil Health Card Scheme",
+      "description": "Soil testing and health monitoring",
+      "questions": [
+        "What is Soil Health Card?",
+        "Benefits of soil testing",
+        "How to get soil tested?",
+        "Reading the report",
+        "Recommended actions"
+      ],
+      "answers": {
+        "What is Soil Health Card?": "Soil Health Card Scheme provides soil health cards to farmers which carry crop-wise recommendations of nutrients and fertilizers required for individual farms to help farmers improve productivity through judicious use of inputs.",
+        "Benefits of soil testing": "• Know exact nutrient status of soil\n• Reduce fertilizer costs\n• Improve crop productivity\n• Prevent soil degradation\n• Optimize fertilizer use\n• Increase farm income",
+        "How to get soil tested?": "1. Contact local agriculture office\n2. Collect soil samples as per guidelines\n3. Submit samples at testing center\n4. Pay nominal fee if applicable\n5. Receive soil health card within 30 days",
+        "Reading the report": "• pH level indicates soil acidity/alkalinity\n• NPK shows nitrogen, phosphorus, potassium levels\n• Organic carbon content\n• Micronutrient status\n• Recommendations for each crop",
+        "Recommended actions": "• Follow fertilizer recommendations\n• Use organic manures as suggested\n• Apply lime if soil is acidic\n• Add micronutrients if deficient\n• Adopt soil conservation practices"
+      }
+    },
+    {
+      "id": "kisan-credit",
+      "name": "Kisan Credit Card",
+      "description": "Credit facility for farmers",
+      "questions": [
+        "Loan benefits",
+        "Eligibility requirements",
+        "Application process",
+        "Interest rates",
+        "Repayment terms"
+      ],
+      "answers": {
+        "Loan benefits": "• Flexible credit limit\n• Lower interest rates\n• No collateral for loans up to ₹1.6 lakh\n• Crop insurance coverage\n• ATM-cum-debit card facility\n• Revolving credit facility",
+        "Eligibility requirements": "• Individual/joint farmers\n• Tenant farmers and sharecroppers\n• Self Help Group members\n• Valid land records\n• Good credit history\n• Age: 18-75 years",
+        "Application process": "1. Visit nearest bank branch\n2. Fill KCC application form\n3. Submit required documents\n4. Bank verification process\n5. Credit limit sanctioned\n6. Receive KCC and debit card",
+        "Interest rates": "• Interest rate: 7% per annum\n• 3% interest subvention by government\n• Effective rate: 4% for prompt repayers\n• Additional 3% incentive for timely repayment\n• Final rate can be as low as 1%",
+        "Repayment terms": "• Flexible repayment schedule\n• Can repay after harvest\n• Revolving credit facility\n• No penalty for early repayment\n• Grace period available"
+      }
+    }
+  ]
+}
