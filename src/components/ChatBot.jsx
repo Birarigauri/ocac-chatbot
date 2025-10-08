@@ -73,7 +73,7 @@ const ChatBot = ({ isOpen, onClose }) => {
   };
 
   const headerStyle = {
-    background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%)',
+    background: '#22c55e',
     color: 'white',
     position: 'relative',
     overflow: 'hidden',
@@ -104,45 +104,21 @@ const ChatBot = ({ isOpen, onClose }) => {
     <>
       <div style={chatbotStyle}>
         {/* Header */}
-        <div style={headerStyle} className="d-flex align-items-center justify-content-between p-4">
-          <div style={{
-            position: 'absolute',
-            top: '-50%',
-            right: '-20%',
-            width: '120px',
-            height: '120px',
-            background: 'rgba(255,255,255,0.08)',
-            borderRadius: '50%',
-            animation: 'float 8s ease-in-out infinite'
-          }} />
-          <div style={{
-            position: 'absolute',
-            bottom: '-30%',
-            left: '-10%',
-            width: '80px',
-            height: '80px',
-            background: 'rgba(255,255,255,0.06)',
-            borderRadius: '50%',
-            animation: 'float 6s ease-in-out infinite reverse'
-          }} />
-          
-          <div className="d-flex align-items-center position-relative">
+        <div style={headerStyle} className="d-flex align-items-center justify-content-center py-2 px-3">
+          <div className="d-flex align-items-center">
             <div style={{
               background: 'rgba(255,255,255,0.25)',
-              borderRadius: '50%',
-              padding: '10px',
-              marginRight: '14px',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-              animation: 'pulse 3s ease-in-out infinite'
+              borderRadius: '8px',
+              padding: '6px',
+              marginRight: '10px'
             }}>
-              <Bot size={22} />
+              <Bot size={16} />
             </div>
             <div>
-              <h5 className="mb-0 fw-bold" style={{ fontSize: '1.1rem' }}>🌾 AgriBot</h5>
-              <small style={{ opacity: 0.9, fontSize: '0.8rem' }}>Government Schemes Assistant</small>
+              <h6 className="mb-0 fw-bold" style={{ fontSize: '1rem' }}>🌾 AgriBot</h6>
+              <small style={{ opacity: 0.9, fontSize: '0.7rem' }}>Agricultural Assistant</small>
             </div>
           </div>
-          <div style={{ width: '40px' }}></div>
         </div>
 
         {/* Chat Messages */}
@@ -158,7 +134,7 @@ const ChatBot = ({ isOpen, onClose }) => {
                   animation: 'fadeInUp 0.6s ease-out 0.2s both'
                 }}>
                 <div style={{
-                  background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+                  background: '#22c55e',
                   borderRadius: '50%',
                   padding: '10px',
                   marginRight: '14px',
@@ -167,7 +143,7 @@ const ChatBot = ({ isOpen, onClose }) => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)',
+                  boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)',
                   animation: 'pulse 2s ease-in-out infinite'
                 }}>
                   <Bot size={18} className="text-white" />
@@ -185,7 +161,7 @@ const ChatBot = ({ isOpen, onClose }) => {
               <div key={index} className={`d-flex mb-4 ${message.type === 'user' ? 'justify-content-end' : 'justify-content-start'}`}>
                 {message.type === 'bot' && (
                   <div style={{
-                    background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+                    background: '#22c55e',
                     borderRadius: '50%',
                     padding: '8px',
                     marginRight: '12px',
@@ -195,7 +171,7 @@ const ChatBot = ({ isOpen, onClose }) => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)',
+                    boxShadow: '0 4px 15px rgba(34, 197, 94, 0.4)',
                     border: '2px solid rgba(255,255,255,0.2)'
                   }}>
                     <Bot size={18} className="text-white" />
@@ -206,14 +182,14 @@ const ChatBot = ({ isOpen, onClose }) => {
                   style={{
                     maxWidth: '85%',
                     background: message.type === 'user' 
-                      ? 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%)' 
-                      : 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                      ? '#22c55e' 
+                      : 'white',
                     color: message.type === 'user' ? 'white' : '#1f2937',
                     wordBreak: 'break-word',
-                    border: message.type === 'bot' ? '2px solid #e2e8f0' : 'none',
+                    border: message.type === 'bot' ? '2px solid #dcfce7' : 'none',
                     boxShadow: message.type === 'bot' 
-                      ? '0 8px 25px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04)' 
-                      : '0 10px 30px rgba(59, 130, 246, 0.3)',
+                      ? '0 8px 25px rgba(34, 197, 94, 0.1)' 
+                      : '0 10px 30px rgba(34, 197, 94, 0.3)',
                     animation: `fadeInUp 0.4s ease-out ${index * 0.1}s both`,
                     position: 'relative',
                     overflow: 'hidden'
@@ -226,7 +202,7 @@ const ChatBot = ({ isOpen, onClose }) => {
                       left: 0,
                       right: 0,
                       height: '3px',
-                      background: 'linear-gradient(90deg, #3b82f6, #1d4ed8, #3b82f6)',
+                      background: '#22c55e',
                       borderRadius: '20px 20px 0 0'
                     }} />
                   )}
@@ -258,7 +234,7 @@ const ChatBot = ({ isOpen, onClose }) => {
                 </div>
                 {message.type === 'user' && (
                   <div style={{
-                    background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
+                    background: '#16a34a',
                     borderRadius: '50%',
                     padding: '8px',
                     marginLeft: '12px',
@@ -268,7 +244,7 @@ const ChatBot = ({ isOpen, onClose }) => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)',
+                    boxShadow: '0 4px 15px rgba(22, 163, 74, 0.4)',
                     border: '2px solid rgba(255,255,255,0.2)'
                   }}>
                     <User size={18} className="text-white" />
@@ -281,7 +257,7 @@ const ChatBot = ({ isOpen, onClose }) => {
             {isLoading && (
               <div className="d-flex mb-4 justify-content-start">
                 <div style={{
-                  background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+                  background: '#22c55e',
                   borderRadius: '50%',
                   padding: '8px',
                   marginRight: '12px',
@@ -291,54 +267,45 @@ const ChatBot = ({ isOpen, onClose }) => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)',
+                  boxShadow: '0 6px 20px rgba(34, 197, 94, 0.4)',
                   border: '2px solid rgba(255,255,255,0.2)',
                   animation: 'pulse 1.5s ease-in-out infinite'
                 }}>
                   <Bot size={18} className="text-white" />
                 </div>
                 <div className="p-4 rounded-4" style={{
-                  maxWidth: '85%',
-                  background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-                  border: '2px solid #e2e8f0',
-                  boxShadow: '0 8px 25px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04)',
+                  maxWidth: '80%',
+                  background: 'rgba(255,255,255,0.95)',
+                  border: '2px solid rgba(34, 197, 94, 0.2)',
+                  boxShadow: '0 8px 25px rgba(34, 197, 94, 0.15)',
                   position: 'relative',
                   overflow: 'hidden'
                 }}>
-                  <div style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: '3px',
-                    background: 'linear-gradient(90deg, #3b82f6, #1d4ed8, #3b82f6)',
-                    borderRadius: '20px 20px 0 0'
-                  }} />
                   <div className="d-flex align-items-center">
                     <div className="d-flex gap-1">
                       <div style={{
                         width: '8px',
                         height: '8px',
-                        background: '#3b82f6',
+                        background: '#22c55e',
                         borderRadius: '50%',
                         animation: 'bounce 1.4s ease-in-out infinite both'
                       }} />
                       <div style={{
                         width: '8px',
                         height: '8px',
-                        background: '#1d4ed8',
+                        background: '#16a34a',
                         borderRadius: '50%',
                         animation: 'bounce 1.4s ease-in-out 0.2s infinite both'
                       }} />
                       <div style={{
                         width: '8px',
                         height: '8px',
-                        background: '#3b82f6',
+                        background: '#22c55e',
                         borderRadius: '50%',
                         animation: 'bounce 1.4s ease-in-out 0.4s infinite both'
                       }} />
                     </div>
-                    <span className="ms-3 text-muted" style={{ fontSize: '0.9rem', fontStyle: 'italic' }}>AgriBot is thinking...</span>
+                    <span className="ms-3" style={{ fontSize: '0.9rem', fontStyle: 'italic', color: '#22c55e' }}>🌾 AgriBot is thinking...</span>
                   </div>
                 </div>
               </div>
@@ -352,7 +319,7 @@ const ChatBot = ({ isOpen, onClose }) => {
           flexShrink: 0,
           maxHeight: '200px',
           overflowY: 'auto',
-          borderTop: '3px solid #3b82f6',
+          borderTop: '3px solid #22c55e',
           padding: '20px'
         }}>
           {currentFlow !== 'schemes' && (
@@ -383,13 +350,13 @@ const ChatBot = ({ isOpen, onClose }) => {
                 onClick={() => handleQuestionClick(item)}
                 className="btn"
                 style={{
-                  background: 'linear-gradient(135deg, #ffffff, #f8fafc)',
-                  border: '2px solid #e2e8f0',
+                  background: 'white',
+                  border: '2px solid #dcfce7',
                   borderRadius: '20px',
                   padding: '12px 20px',
                   fontSize: '1rem',
                   fontWeight: '500',
-                  color: '#1e293b',
+                  color: '#16a34a',
                   boxShadow: '0 4px 15px rgba(0,0,0,0.08)',
                   transition: 'all 0.3s ease',
                   position: 'relative',
@@ -398,16 +365,16 @@ const ChatBot = ({ isOpen, onClose }) => {
                   maxWidth: '300px'
                 }}
                 onMouseEnter={(e) => {
-                  e.target.style.background = 'linear-gradient(135deg, #3b82f6, #1d4ed8)';
+                  e.target.style.background = '#22c55e';
                   e.target.style.color = 'white';
                   e.target.style.transform = 'translateY(-3px)';
-                  e.target.style.boxShadow = '0 8px 25px rgba(59, 130, 246, 0.3)';
+                  e.target.style.boxShadow = '0 8px 25px rgba(34, 197, 94, 0.3)';
                 }}
                 onMouseLeave={(e) => {
-                  e.target.style.background = 'linear-gradient(135deg, #ffffff, #f8fafc)';
-                  e.target.style.color = '#1e293b';
+                  e.target.style.background = 'white';
+                  e.target.style.color = '#16a34a';
                   e.target.style.transform = 'translateY(0)';
-                  e.target.style.boxShadow = '0 4px 15px rgba(0,0,0,0.08)';
+                  e.target.style.boxShadow = '0 4px 15px rgba(34, 197, 94, 0.1)';
                 }}
               >
                 {item.text}
