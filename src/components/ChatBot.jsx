@@ -87,38 +87,31 @@ const ChatBot = ({ isOpen, onClose }) => {
     }
   };
 
-  if (!isOpen) return null;
-
   const chatbotStyle = {
-    position: 'fixed',
-    bottom: '1.5rem',
-    right: '1.5rem',
-    width: '30rem',
-    height: '550px',
-    zIndex: 9999,
+    width: '100%',
+    height: '100vh',
     backgroundColor: 'white',
-    borderRadius: '1.25rem',
-    boxShadow: '0 25px 80px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.03)',
+    borderRadius: '0',
     border: 'none',
     overflow: 'hidden',
-    backdropFilter: 'blur(20px)',
-    animation: 'slideInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
+    display: 'flex',
+    flexDirection: 'column'
   };
 
   const headerStyle = {
     background: 'linear-gradient(135deg, #047857 0%, #059669 50%, #10b981 100%)',
     color: 'white',
-    borderTopLeftRadius: '1.25rem',
-    borderTopRightRadius: '1.25rem',
     position: 'relative',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    flexShrink: 0
   };
 
   const chatAreaStyle = {
     background: 'linear-gradient(135deg, #fafbfc 0%, #f4f6f8 100%)',
     position: 'relative',
     overflowY: 'auto',
-    overflowX: 'hidden'
+    overflowX: 'hidden',
+    flex: 1
   };
 
   const dotBackgroundStyle = {
@@ -135,7 +128,7 @@ const ChatBot = ({ isOpen, onClose }) => {
 
   return (
     <>
-      <div style={chatbotStyle} className="border d-flex flex-column">
+      <div style={chatbotStyle}>
         {/* Header */}
         <div style={headerStyle} className="d-flex align-items-center justify-content-between p-4">
           {/* Decorative background elements */}
@@ -176,31 +169,11 @@ const ChatBot = ({ isOpen, onClose }) => {
               <small style={{ opacity: 0.9, fontSize: '0.8rem' }}>Your Smart Farming Assistant</small>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="btn btn-link text-white p-2 position-relative"
-            style={{ 
-              border: 'none', 
-              background: 'rgba(255,255,255,0.15)', 
-              borderRadius: '50%',
-              transition: 'all 0.3s ease',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.background = 'rgba(255,255,255,0.25)';
-              e.target.style.transform = 'scale(1.05)';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background = 'rgba(255,255,255,0.15)';
-              e.target.style.transform = 'scale(1)';
-            }}
-          >
-            <X size={16} />
-          </button>
+          <div style={{ width: '40px' }}></div>
         </div>
 
         {/* Chat Messages */}
-        <div style={chatAreaStyle} className="chatbot flex-fill p-3">
+        <div style={chatAreaStyle} className="chatbot p-4">
           <div style={dotBackgroundStyle}></div>
           <div style={{ position: 'relative', zIndex: 10 }}>
             {messages.length === 0 && (
@@ -363,7 +336,8 @@ const ChatBot = ({ isOpen, onClose }) => {
         <div className="p-4 border-top" style={{ 
           background: 'linear-gradient(135deg, #ffffff 0%, #f8fffe 50%, #f0fdf4 100%)',
           borderTop: '1px solid #d1fae5',
-          backdropFilter: 'blur(10px)'
+          backdropFilter: 'blur(10px)',
+          flexShrink: 0
         }}>
           {isListening && (
             <div className="text-center mb-3">
@@ -511,33 +485,7 @@ const ChatBot = ({ isOpen, onClose }) => {
             </div>
           </div>
           
-          <div className="text-center">
-            <button 
-              onClick={onClose} 
-              className="btn btn-outline-secondary btn-sm px-4"
-              style={{
-                borderRadius: '20px',
-                border: '1px solid #d1d5db',
-                color: '#6b7280',
-                fontSize: '0.85rem',
-                fontWeight: '500',
-                transition: 'all 0.2s ease',
-                background: 'rgba(255, 255, 255, 0.8)'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = '#f9fafb';
-                e.target.style.borderColor = '#9ca3af';
-                e.target.style.color = '#4b5563';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
-                e.target.style.borderColor = '#d1d5db';
-                e.target.style.color = '#6b7280';
-              }}
-            >
-              ✕ Close Chat
-            </button>
-          </div>
+
         </div>
       </div>
 
