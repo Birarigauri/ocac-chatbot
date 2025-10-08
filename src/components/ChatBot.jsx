@@ -6,6 +6,7 @@ const ChatBot = ({ isOpen, onClose }) => {
   const [messages, setMessages] = useState([]);
   const [currentFlow, setCurrentFlow] = useState('schemes');
   const [selectedScheme, setSelectedScheme] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const getAvailableQuestions = () => {
     if (currentFlow === 'schemes') {
@@ -26,20 +27,27 @@ const ChatBot = ({ isOpen, onClose }) => {
 
   const handleQuestionClick = (item) => {
     if (item.type === 'scheme') {
-      setMessages(prev => [
-        ...prev,
-        { type: 'user', text: item.text },
-        { type: 'bot', text: `Great! You've selected ${item.data.name}. ${item.data.description}. Here are some questions I can help you with:` }
-      ]);
-      setSelectedScheme(item.data);
-      setCurrentFlow(item.data.id);
+      setMessages(prev => [...prev, { type: 'user', text: item.text }]);
+      setIsLoading(true);
+      
+      setTimeout(() => {
+        setMessages(prev => [
+          ...prev,
+          { type: 'bot', text: `Great! You've selected ${item.data.name}. ${item.data.description}. Here are some questions I can help you with:` }
+        ]);
+        setSelectedScheme(item.data);
+        setCurrentFlow(item.data.id);
+        setIsLoading(false);
+      }, 1500);
     } else if (item.type === 'question') {
-      const answer = selectedScheme.answers[item.data];
-      setMessages(prev => [
-        ...prev,
-        { type: 'user', text: item.text },
-        { type: 'bot', text: answer }
-      ]);
+      setMessages(prev => [...prev, { type: 'user', text: item.text }]);
+      setIsLoading(true);
+      
+      setTimeout(() => {
+        const answer = selectedScheme.answers[item.data];
+        setMessages(prev => [...prev, { type: 'bot', text: answer }]);
+        setIsLoading(false);
+      }, 1500);
     }
   };
 
@@ -268,95 +276,143 @@ const ChatBot = ({ isOpen, onClose }) => {
                 )}
               </div>
             ))}
+            
+            {/* Loading Animation */}
+            {isLoading && (
+              <div className="d-flex mb-4 justify-content-start">
+                <div style={{
+                  background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+                  borderRadius: '50%',
+                  padding: '8px',
+                  marginRight: '12px',
+                  marginTop: '4px',
+                  minWidth: '36px',
+                  height: '36px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)',
+                  border: '2px solid rgba(255,255,255,0.2)',
+                  animation: 'pulse 1.5s ease-in-out infinite'
+                }}>
+                  <Bot size={18} className="text-white" />
+                </div>
+                <div className="p-4 rounded-4" style={{
+                  maxWidth: '85%',
+                  background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                  border: '2px solid #e2e8f0',
+                  boxShadow: '0 8px 25px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04)',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}>
+                  <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '3px',
+                    background: 'linear-gradient(90deg, #3b82f6, #1d4ed8, #3b82f6)',
+                    borderRadius: '20px 20px 0 0'
+                  }} />
+                  <div className="d-flex align-items-center">
+                    <div className="d-flex gap-1">
+                      <div style={{
+                        width: '8px',
+                        height: '8px',
+                        background: '#3b82f6',
+                        borderRadius: '50%',
+                        animation: 'bounce 1.4s ease-in-out infinite both'
+                      }} />
+                      <div style={{
+                        width: '8px',
+                        height: '8px',
+                        background: '#1d4ed8',
+                        borderRadius: '50%',
+                        animation: 'bounce 1.4s ease-in-out 0.2s infinite both'
+                      }} />
+                      <div style={{
+                        width: '8px',
+                        height: '8px',
+                        background: '#3b82f6',
+                        borderRadius: '50%',
+                        animation: 'bounce 1.4s ease-in-out 0.4s infinite both'
+                      }} />
+                    </div>
+                    <span className="ms-3 text-muted" style={{ fontSize: '0.9rem', fontStyle: 'italic' }}>AgriBot is thinking...</span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Sticky Suggested Questions */}
+        {/* Scrollable Suggested Questions */}
         <div style={{ 
           background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
           flexShrink: 0,
-          maxHeight: '300px',
+          maxHeight: '200px',
           overflowY: 'auto',
-          borderTop: '3px solid #3b82f6'
+          borderTop: '3px solid #3b82f6',
+          padding: '20px'
         }}>
-          <div className="p-4">
-            <div className="text-center mb-4">
-              <div style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
-                borderRadius: '25px',
-                padding: '12px 24px',
-                boxShadow: '0 8px 25px rgba(59, 130, 246, 0.3)',
-                marginBottom: '8px'
-              }}>
-                <span style={{ fontSize: '20px', marginRight: '10px' }}>
-                  {currentFlow === 'schemes' ? '🏛️' : '📋'}
-                </span>
-                <span className="fw-bold text-white" style={{ fontSize: '1.2rem' }}>
-                  {currentFlow === 'schemes' ? 'Government Schemes' : selectedScheme?.name}
-                </span>
-              </div>
-              {currentFlow !== 'schemes' && (
-                <div className="mt-2">
-                  <button 
-                    onClick={handleBackToSchemes}
-                    className="btn"
-                    style={{
-                      background: 'linear-gradient(135deg, #6b7280, #4b5563)',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '20px',
-                      fontSize: '0.9rem',
-                      padding: '8px 20px',
-                      fontWeight: '500',
-                      boxShadow: '0 4px 15px rgba(107, 114, 128, 0.3)'
-                    }}
-                  >
-                    ← Back to All Schemes
-                  </button>
-                </div>
-              )}
+          {currentFlow !== 'schemes' && (
+            <div className="text-center mb-3">
+              <button 
+                onClick={handleBackToSchemes}
+                className="btn btn-sm"
+                style={{
+                  background: 'linear-gradient(135deg, #6b7280, #4b5563)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '20px',
+                  fontSize: '0.9rem',
+                  padding: '8px 20px',
+                  fontWeight: '500',
+                  boxShadow: '0 4px 15px rgba(107, 114, 128, 0.3)'
+                }}
+              >
+                ← Back to All Schemes
+              </button>
             </div>
-            
-            <div className="d-flex flex-wrap justify-content-center gap-3">
-              {getAvailableQuestions().map((item, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleQuestionClick(item)}
-                  className="btn"
-                  style={{
-                    background: 'linear-gradient(135deg, #ffffff, #f8fafc)',
-                    border: '2px solid #e2e8f0',
-                    borderRadius: '20px',
-                    padding: '12px 20px',
-                    fontSize: '1rem',
-                    fontWeight: '500',
-                    color: '#1e293b',
-                    boxShadow: '0 4px 15px rgba(0,0,0,0.08)',
-                    transition: 'all 0.3s ease',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    minWidth: 'fit-content',
-                    maxWidth: '300px'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.background = 'linear-gradient(135deg, #3b82f6, #1d4ed8)';
-                    e.target.style.color = 'white';
-                    e.target.style.transform = 'translateY(-3px)';
-                    e.target.style.boxShadow = '0 8px 25px rgba(59, 130, 246, 0.3)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.background = 'linear-gradient(135deg, #ffffff, #f8fafc)';
-                    e.target.style.color = '#1e293b';
-                    e.target.style.transform = 'translateY(0)';
-                    e.target.style.boxShadow = '0 4px 15px rgba(0,0,0,0.08)';
-                  }}
-                >
-                  {item.text}
-                </button>
-              ))}
-            </div>
+          )}
+          
+          <div className="d-flex flex-wrap justify-content-center gap-3">
+            {getAvailableQuestions().map((item, index) => (
+              <button
+                key={index}
+                onClick={() => handleQuestionClick(item)}
+                className="btn"
+                style={{
+                  background: 'linear-gradient(135deg, #ffffff, #f8fafc)',
+                  border: '2px solid #e2e8f0',
+                  borderRadius: '20px',
+                  padding: '12px 20px',
+                  fontSize: '1rem',
+                  fontWeight: '500',
+                  color: '#1e293b',
+                  boxShadow: '0 4px 15px rgba(0,0,0,0.08)',
+                  transition: 'all 0.3s ease',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  minWidth: 'fit-content',
+                  maxWidth: '300px'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = 'linear-gradient(135deg, #3b82f6, #1d4ed8)';
+                  e.target.style.color = 'white';
+                  e.target.style.transform = 'translateY(-3px)';
+                  e.target.style.boxShadow = '0 8px 25px rgba(59, 130, 246, 0.3)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = 'linear-gradient(135deg, #ffffff, #f8fafc)';
+                  e.target.style.color = '#1e293b';
+                  e.target.style.transform = 'translateY(0)';
+                  e.target.style.boxShadow = '0 4px 15px rgba(0,0,0,0.08)';
+                }}
+              >
+                {item.text}
+              </button>
+            ))}
           </div>
         </div>
       </div>
@@ -389,6 +445,14 @@ const ChatBot = ({ isOpen, onClose }) => {
         }
         .btn:hover .hover-gradient {
           opacity: 1 !important;
+        }
+        @keyframes bounce {
+          0%, 80%, 100% {
+            transform: scale(0);
+          }
+          40% {
+            transform: scale(1);
+          }
         }
       `}</style>
     </>
