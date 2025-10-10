@@ -54,6 +54,7 @@ const ChatBot = ({ isOpen, onClose, category, isPopup = false }) => {
         ]);
         setSelectedCategory(item.data);
         setCurrentFlow('category-questions');
+        window.history.pushState({}, '', `?category=${item.data.id}`);
         setIsLoading(false);
       }, 1500);
     } else if (item.type === 'scheme') {
@@ -100,6 +101,7 @@ const ChatBot = ({ isOpen, onClose, category, isPopup = false }) => {
     setCurrentFlow('categories');
     setSelectedCategory(null);
     setSelectedScheme(null);
+    window.history.pushState({}, '', '/');
   };
 
   const handleBack = () => {

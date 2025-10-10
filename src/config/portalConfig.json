@@ -8,7 +8,8 @@
     "defaultTheme": "light",
     "supportedLanguages": [
       { "code": "en", "name": "EN" },
-      { "code": "hi", "name": "HI" }
+      { "code": "hi", "name": "HI" },
+      { "code": "or", "name": "OR" }
     ],
     "colors": {
       "primary": "#22c5",
