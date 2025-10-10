@@ -1,0 +1,20 @@
+{
+  "portal": {
+    "name": "FamrutBot",
+    "subtitle": "Agricultural Assistant",
+    "logo": "Wheat",
+    "showLanguageOption": true,
+    "showThemeOption": true,
+    "defaultTheme": "light",
+    "supportedLanguages": [
+      { "code": "en", "name": "EN" },
+      { "code": "hi", "name": "HI" }
+    ],
+    "colors": {
+      "primary": "#22c5",
+      "secondary": "#22c5",
+      "purple":"#22c55e"
+    }
+  }
+}
+

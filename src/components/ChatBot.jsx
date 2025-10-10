@@ -1,16 +1,26 @@
 import { Bot, User, Volume2, Sun, Moon, Sprout, Wheat, Globe } from "lucide-react";
 import { useState } from "react";
 import schemesData from "../data/schemes.json";
+import categoriesData from "../data/categories.json";
+import portalConfig from "../config/portalConfig.json";
 
-const ChatBot = ({ isOpen, onClose }) => {
+const ChatBot = ({ isOpen, onClose, category, isPopup = false }) => {
   const [messages, setMessages] = useState([]);
   const [currentFlow, setCurrentFlow] = useState('schemes');
   const [selectedScheme, setSelectedScheme] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState(portalConfig.portal.defaultTheme);
+  const config = portalConfig.portal;
 
   const getAvailableQuestions = () => {
-    if (currentFlow === 'schemes') {
+    if (category) {
+      // Use category-specific questions
+      return category.questions.map(question => ({
+        text: question,
+        type: 'question',
+        data: question
+      }));
+    } else if (currentFlow === 'schemes') {
       return schemesData.schemes.map(scheme => ({
         text: scheme.name,
         type: 'scheme',
@@ -45,7 +55,7 @@ const ChatBot = ({ isOpen, onClose }) => {
       setIsLoading(true);
       
       setTimeout(() => {
-        const answer = selectedScheme.answers[item.data];
+        const answer = category ? category.answers[item.data] : selectedScheme.answers[item.data];
         setMessages(prev => [...prev, { type: 'bot', text: answer }]);
         setIsLoading(false);
       }, 1500);
@@ -62,9 +72,17 @@ const ChatBot = ({ isOpen, onClose }) => {
     setSelectedScheme(null);
   };
 
+  const handleBack = () => {
+    if (category) {
+      onClose();
+    } else {
+      handleBackToSchemes();
+    }
+  };
+
   const chatbotStyle = {
     width: '100%',
-    height: '100vh',
+    height: isPopup ? '100%' : '100vh',
     backgroundColor: theme === 'dark' ? '#1f2937' : 'white',
     borderRadius: '0',
     border: 'none',
@@ -74,7 +92,7 @@ const ChatBot = ({ isOpen, onClose }) => {
   };
 
   const headerStyle = {
-    background: '#22c55e',
+    background: config.colors.primary,
     color: 'white',
     position: 'relative',
     overflow: 'hidden',
@@ -109,57 +127,83 @@ const ChatBot = ({ isOpen, onClose }) => {
         <div style={headerStyle} className="d-flex align-items-center justify-content-between py-2 px-3">
           <div className="d-flex align-items-center">
             <div style={{
-              background: 'rgba(255,255,255,0.25)',
+              background: 'rgba(252, 252, 252, 0.98)',
               borderRadius: '8px',
               padding: '6px',
               marginRight: '10px'
             }}>
-              <Bot size={16} />
+              <img src="/logo.png" width={30} alt="" />
             </div>
             <div>
               <h6 className="mb-0 fw-bold d-flex align-items-center" style={{ fontSize: '1rem' }}>
-                <Wheat size={14} className="me-1" /> AgriBot
+                {/* <Wheat size={14} className="me-1" /> */}
+                 {config.name}
               </h6>
-              <small style={{ opacity: 0.9, fontSize: '0.7rem' }}>Agricultural Assistant</small>
+              <small style={{ opacity: 0.9, fontSize: '0.7rem' }}>{config.subtitle}</small>
             </div>
           </div>
           
-          <div className="d-flex align-items-center gap-2">
-            <div className="d-flex align-items-center" style={{
-              background: 'rgba(255,255,255,0.2)',
-              border: '1px solid rgba(255,255,255,0.3)',
-              borderRadius: '8px',
-              padding: '4px 8px',
-              backdropFilter: 'blur(10px)',
-              transition: 'all 0.3s ease'
-            }}>
-              <Globe size={12} className="me-1" style={{ opacity: 0.9 }} />
-              <select className="form-select form-select-sm border-0" style={{
-                background: 'transparent',
-                color: 'white',
-                fontSize: '0.75rem',
-                padding: '0',
-                minWidth: '40px',
-                boxShadow: 'none'
+          <div className="d-flex align-items-center gap-2" style={{ marginRight: isPopup ? '60px' : '0' }}>
+            {config.showLanguageOption && (
+              <div className="d-flex align-items-center" style={{
+                background: 'rgba(255,255,255,0.25)',
+                border: '1px solid rgba(255,255,255,0.4)',
+                borderRadius: '12px',
+                padding: '8px 12px',
+                backdropFilter: 'blur(15px)',
+                transition: 'all 0.3s ease',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                minWidth: '70px',
+                height: '36px'
               }}>
-                <option value="en" style={{ color: '#000' }}>EN</option>
-                <option value="hi" style={{ color: '#000' }}>HI</option>
-              </select>
-            </div>
+                <Globe size={14} className="me-2" style={{ opacity: 0.95 }} />
+                <select className="form-select form-select-sm border-0" style={{
+                  background: 'transparent',
+                  color: 'white',
+                  fontSize: '0.8rem',
+                  padding: '0',
+                  boxShadow: 'none',
+                  fontWeight: '500',
+                  width: '40px'
+                }}>
+                  {config.supportedLanguages.map(lang => (
+                    <option key={lang.code} value={lang.code} style={{ color: '#000', background: 'white' }}>{lang.name}</option>
+                  ))}
+                </select>
+              </div>
+            )}
             
-            <button 
-              onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-              className="btn p-0" style={{
-              background: 'rgba(255,255,255,0.2)',
-              border: '1px solid rgba(255,255,255,0.3)',
-              borderRadius: '8px',
-              padding: '8px',
-              backdropFilter: 'blur(10px)',
-              transition: 'all 0.3s ease',
-              color: 'white'
-            }}>
-              {theme === 'light' ? <Sun size={14} /> : <Moon size={14} />}
-            </button>
+            {config.showThemeOption && (
+              <button 
+                onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+                className="btn p-0 me-4" 
+                title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+                style={{
+                background: 'rgba(255,255,255,0.25)',
+                border: '1px solid rgba(255,255,255,0.4)',
+                borderRadius: '12px',
+                padding: '8px 12px',
+                backdropFilter: 'blur(15px)',
+                transition: 'all 0.3s ease',
+                color: 'white',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                minWidth: '70px',
+                height: '36px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = 'rgba(255,255,255,0.35)';
+                e.target.style.transform = 'scale(1.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'rgba(255,255,255,0.25)';
+                e.target.style.transform = 'scale(1)';
+              }}>
+                {theme === 'light' ? <Sun size={16} /> : <Moon size={16} />}
+              </button>
+            )}
           </div>
         </div>
 
@@ -176,7 +220,7 @@ const ChatBot = ({ isOpen, onClose }) => {
                   animation: 'fadeInUp 0.6s ease-out 0.2s both'
                 }}>
                 <div style={{
-                  background: '#22c55e',
+                  background: config.colors.primary,
                   borderRadius: '50%',
                   padding: '10px',
                   marginRight: '14px',
@@ -185,17 +229,20 @@ const ChatBot = ({ isOpen, onClose }) => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)',
+                  // boxShadow: `0 4px 12px ${config.colors.primary}4D`,
                   animation: 'pulse 2s ease-in-out infinite'
                 }}>
                   <Bot size={18} className="text-white" />
                 </div>
                 <div>
                   <div className="fw-bold mb-2 d-flex align-items-center" style={{ fontSize: '1.05rem', color: theme === 'dark' ? '#f9fafb' : '#1f2937' }}>
-                    Welcome to AgriBot! <Sprout size={16} className="ms-1" />
+                    Welcome to {config.name}! <Sprout size={16} className="ms-1" />
                   </div>
                   <p className="mb-0" style={{ lineHeight: '1.5', fontSize: '0.9rem', color: theme === 'dark' ? '#d1d5db' : '#6b7280' }}>
-                    I'm here to help you with government schemes for farmers. Select a scheme below to get detailed information.
+                    {category 
+                      ? `I'm here to help you with ${category.name.toLowerCase()}. Ask me anything about this topic!`
+                      : "I'm here to help you with government schemes for farmers. Select a scheme below to get detailed information."
+                    }
                   </p>
                 </div>
               </div>
@@ -205,7 +252,7 @@ const ChatBot = ({ isOpen, onClose }) => {
               <div key={index} className={`d-flex mb-4 ${message.type === 'user' ? 'justify-content-end' : 'justify-content-start'}`}>
                 {message.type === 'bot' && (
                   <div style={{
-                    background: '#22c55e',
+                    background: config.colors.primary,
                     borderRadius: '50%',
                     padding: '8px',
                     marginRight: '12px',
@@ -215,7 +262,7 @@ const ChatBot = ({ isOpen, onClose }) => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    boxShadow: '0 4px 15px rgba(34, 197, 94, 0.4)',
+                    // boxShadow: `0 4px 15px ${config.colors.primary}66`,
                     border: '2px solid rgba(255,255,255,0.2)'
                   }}>
                     <Bot size={18} className="text-white" />
@@ -226,14 +273,14 @@ const ChatBot = ({ isOpen, onClose }) => {
                   style={{
                     maxWidth: '85%',
                     background: message.type === 'user' 
-                      ? '#22c55e' 
+                      ? config.colors.primary 
                       : theme === 'dark' ? '#4b5563' : 'white',
                     color: message.type === 'user' ? 'white' : theme === 'dark' ? '#f9fafb' : '#1f2937',
                     wordBreak: 'break-word',
                     border: message.type === 'bot' ? '2px solid #dcfce7' : 'none',
-                    boxShadow: message.type === 'bot' 
-                      ? '0 8px 25px rgba(34, 197, 94, 0.1)' 
-                      : '0 10px 30px rgba(34, 197, 94, 0.3)',
+                    // boxShadow: message.type === 'bot' 
+                    //   ? '0 8px 25px rgba(34, 197, 94, 0.1)' 
+                    //   : '0 10px 30px rgba(34, 197, 94, 0.3)',
                     animation: `fadeInUp 0.4s ease-out ${index * 0.1}s both`,
                     position: 'relative',
                     overflow: 'hidden'
@@ -246,7 +293,7 @@ const ChatBot = ({ isOpen, onClose }) => {
                       left: 0,
                       right: 0,
                       height: '3px',
-                      background: '#22c55e',
+                      background: config.colors.primary,
                       borderRadius: '20px 20px 0 0'
                     }} />
                   )}
@@ -265,7 +312,7 @@ const ChatBot = ({ isOpen, onClose }) => {
                         }}
                         className="btn btn-link p-1 ms-2"
                         style={{ 
-                          color: '#059669', 
+                          color: config.colors.secondary, 
                           minWidth: 'auto',
                           borderRadius: '50%'
                         }}
@@ -278,7 +325,7 @@ const ChatBot = ({ isOpen, onClose }) => {
                 </div>
                 {message.type === 'user' && (
                   <div style={{
-                    background: '#16a34a',
+                    background: config.colors.secondary,
                     borderRadius: '50%',
                     padding: '8px',
                     marginLeft: '12px',
@@ -288,7 +335,7 @@ const ChatBot = ({ isOpen, onClose }) => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    boxShadow: '0 4px 15px rgba(115, 120, 117, 0.4)',
+                    // boxShadow: '0 4px 15px rgba(115, 120, 117, 0.4)',
                     border: '2px solid rgba(255,255,255,0.2)'
                   }}>
                     <User size={18} className="text-white" />
@@ -301,7 +348,7 @@ const ChatBot = ({ isOpen, onClose }) => {
             {isLoading && (
               <div className="d-flex mb-4 justify-content-start">
                 <div style={{
-                  background: '#22c55e',
+                  background: config.colors.primary,
                   borderRadius: '50%',
                   padding: '8px',
                   marginRight: '12px',
@@ -311,7 +358,7 @@ const ChatBot = ({ isOpen, onClose }) => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '0 6px 20px rgba(34, 197, 94, 0.4)',
+                  // boxShadow: `0 6px 20px ${config.colors.primary}66`,
                   border: '2px solid rgba(255,255,255,0.2)',
                   animation: 'pulse 1.5s ease-in-out infinite'
                 }}>
@@ -320,8 +367,8 @@ const ChatBot = ({ isOpen, onClose }) => {
                 <div className="p-4 rounded-4" style={{
                   maxWidth: '80%',
                   background: 'rgba(255,255,255,0.95)',
-                  border: '2px solid rgba(34, 197, 94, 0.2)',
-                  boxShadow: '0 8px 25px rgba(34, 197, 94, 0.15)',
+                  // border: '2px solid rgba(34, 197, 94, 0.2)',
+                  // boxShadow: '0 8px 25px rgba(34, 197, 94, 0.15)',
                   position: 'relative',
                   overflow: 'hidden'
                 }}>
@@ -330,26 +377,26 @@ const ChatBot = ({ isOpen, onClose }) => {
                       <div style={{
                         width: '8px',
                         height: '8px',
-                        background: '#22c55e',
+                        background: config.colors.primary,
                         borderRadius: '50%',
                         animation: 'bounce 1.4s ease-in-out infinite both'
                       }} />
                       <div style={{
                         width: '8px',
                         height: '8px',
-                        background: '#16a34a',
+                        background: config.colors.secondary,
                         borderRadius: '50%',
                         animation: 'bounce 1.4s ease-in-out 0.2s infinite both'
                       }} />
                       <div style={{
                         width: '8px',
                         height: '8px',
-                        background: '#22c55e',
+                        background: config.colors.primary,
                         borderRadius: '50%',
                         animation: 'bounce 1.4s ease-in-out 0.4s infinite both'
                       }} />
                     </div>
-                    <span className="ms-3" style={{ fontSize: '0.9rem', fontStyle: 'italic', color: '#22c55e' }}>🌾 AgriBot is thinking...</span>
+                    <span className="ms-3" style={{ fontSize: '0.9rem', fontStyle: 'italic', color: config.colors.primary }}> {config.name} is thinking...</span>
                   </div>
                 </div>
               </div>
@@ -357,70 +404,109 @@ const ChatBot = ({ isOpen, onClose }) => {
           </div>
         </div>
 
-        {/* Scrollable Suggested Questions */}
+        {/* Vertical Scrollable Suggested Questions */}
         <div style={{ 
-          background: theme === 'dark' 
+          background: isPopup ? (theme === 'dark' ? '#374151' : 'white') : (theme === 'dark' 
             ? 'linear-gradient(135deg, #374151 0%, #4b5563 100%)' 
-            : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+            : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)'),
           flexShrink: 0,
-          maxHeight: '200px',
-          overflowY: 'auto',
-          borderTop: '3px solid #22c55e',
-          padding: '20px'
+          height: isPopup ? '140px' : '180px',
+          borderTop: isPopup ? 'none' : `2px solid ${config.colors.primary}`,
+          borderTopLeftRadius: isPopup ? '20px' : '0',
+          borderTopRightRadius: isPopup ? '20px' : '0',
+          padding: isPopup ? '15px' : '15px',
+          position: 'relative',
+          boxShadow: isPopup ? '0 -4px 20px rgba(0,0,0,0.1)' : 'none'
         }}>
-          {currentFlow !== 'schemes' && (
-            <div className="text-center mb-3">
+          {(currentFlow !== 'schemes' || category) && (
+            <div className={isPopup ? "position-absolute" : "text-center mb-3"} style={isPopup ? {
+              top: '10px',
+              left: '10px',
+              zIndex: 10
+            } : {}}>
               <button 
-                onClick={handleBackToSchemes}
+                onClick={handleBack}
                 className="btn btn-sm"
                 style={{
-                  background: 'linear-gradient(135deg, #6b7280, #4b5563)',
+                  background: isPopup ? `${config.colors.secondary}E6` : `linear-gradient(135deg, ${config.colors.secondary}, ${config.colors.primary})`,
                   color: 'white',
                   border: 'none',
-                  borderRadius: '20px',
-                  fontSize: '0.9rem',
-                  padding: '8px 20px',
+                  borderRadius: isPopup ? '50%' : '20px',
+                  fontSize: '0.8rem',
+                  padding: isPopup ? '8px' : '5px 14px',
                   fontWeight: '500',
-                  boxShadow: '0 4px 15px rgba(107, 114, 128, 0.3)'
+                  boxShadow: `0 2px 8px ${config.colors.secondary}4D`,
+                  minWidth: isPopup ? '36px' : 'auto',
+                  height: isPopup ? '36px' : 'auto',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
                 }}
               >
-                ← Back to All Schemes
+                {isPopup ? '←' : `← ${category ? 'Back to Categories' : 'Back to All Schemes'}`}
               </button>
             </div>
           )}
           
-          <div className="d-flex flex-wrap justify-content-center gap-3">
+          <div 
+            className="d-flex flex-column gap-2 questions-container"
+            style={{
+              overflowY: 'auto',
+              overflowX: 'hidden',
+              height: '100%',
+              scrollBehavior: 'smooth',
+              alignItems: 'center',
+              textAlign: 'center',
+              paddingLeft: isPopup && (currentFlow !== 'schemes' || category) ? '50px' : '0',
+              paddingRight: isPopup && (currentFlow !== 'schemes' || category) ? '10px' : '0'
+            }}
+          >
             {getAvailableQuestions().map((item, index) => (
               <button
                 key={index}
                 onClick={() => handleQuestionClick(item)}
-                className="btn"
+                className="btn text-start"
                 style={{
-                  background: 'white',
-                  border: '2px solid #dcfce7',
-                  borderRadius: '20px',
-                  padding: '12px 20px',
-                  fontSize: '1rem',
+                  background: isPopup ? 'transparent' : (theme === 'dark' ? '#4b5563' : 'white'),
+                  border: isPopup ? 'none' : `1px solid ${theme === 'dark' ? '#6b7280' : '#e5e7eb'}`,
+                  borderRadius: isPopup ? '0' : '12px',
+                  padding: isPopup ? '12px 0' : '8px 14px',
+                  fontSize: isPopup ? '1.1rem' : '0.85rem',
                   fontWeight: '500',
-                  color: '#16a34a',
-                  boxShadow: '0 4px 15px rgba(0,0,0,0.08)',
-                  transition: 'all 0.3s ease',
-                  position: 'relative',
-                  overflow: 'hidden',
-                  minWidth: 'fit-content',
-                  maxWidth: '300px'
+                  color: theme === 'dark' ? '#f3f4f6' : '#374151',
+                  boxShadow: isPopup ? 'none' : (theme === 'dark' 
+                    ? '0 1px 4px rgba(0,0,0,0.3)' 
+                    : '0 1px 4px rgba(0,0,0,0.08)'),
+                  transition: 'all 0.2s ease',
+                  width: isPopup ? '80%' : '100%',
+                  textAlign: 'center',
+                  borderBottom: isPopup ? `1px solid ${theme === 'dark' ? '#4b5563' : '#e5e7eb'}` : 'none'
                 }}
                 onMouseEnter={(e) => {
-                  e.target.style.background = '#22c55e';
-                  e.target.style.color = 'white';
-                  e.target.style.transform = 'translateY(-3px)';
-                  e.target.style.boxShadow = '0 8px 25px rgba(34, 197, 94, 0.3)';
+                  if (!isPopup) {
+                    e.target.style.background = config.colors.primary;
+                    e.target.style.color = 'white';
+                    e.target.style.transform = 'translateX(4px)';
+                    e.target.style.boxShadow = `0 2px 8px ${config.colors.primary}66`;
+                    e.target.style.borderColor = config.colors.primary;
+                  } else {
+                    e.target.style.color = config.colors.primary;
+                    e.target.style.paddingLeft = '8px';
+                  }
                 }}
                 onMouseLeave={(e) => {
-                  e.target.style.background = 'white';
-                  e.target.style.color = '#16a34a';
-                  e.target.style.transform = 'translateY(0)';
-                  e.target.style.boxShadow = '0 4px 15px rgba(34, 197, 94, 0.1)';
+                  if (!isPopup) {
+                    e.target.style.background = theme === 'dark' ? '#4b5563' : 'white';
+                    e.target.style.color = theme === 'dark' ? '#f3f4f6' : config.colors.secondary;
+                    e.target.style.transform = 'translateX(0)';
+                    e.target.style.boxShadow = theme === 'dark' 
+                      ? '0 1px 4px rgba(0,0,0,0.3)' 
+                      : '0 1px 4px rgba(0,0,0,0.08)';
+                    e.target.style.borderColor = theme === 'dark' ? '#6b7280' : '#e5e7eb';
+                  } else {
+                    e.target.style.color = theme === 'dark' ? '#f3f4f6' : '#374151';
+                    e.target.style.paddingLeft = '0';
+                  }
                 }}
               >
                 {item.text}
@@ -466,6 +552,14 @@ const ChatBot = ({ isOpen, onClose }) => {
           40% {
             transform: scale(1);
           }
+        }
+        /* Hide scrollbar for suggested questions */
+        .questions-container::-webkit-scrollbar {
+          display: none;
+        }
+        .questions-container {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
         }
       `}</style>
     </>

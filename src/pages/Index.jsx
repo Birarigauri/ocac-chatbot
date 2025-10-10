@@ -1,7 +1,7 @@
-import ChatBot from "@/components/ChatBot";
+import HomeScreen from "@/components/HomeScreen";
 
 const Index = () => {
-  return <ChatBot isOpen={true} onClose={() => {}} />;
+  return <HomeScreen />;
 };
 
 export default Index;

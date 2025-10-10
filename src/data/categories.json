@@ -1,0 +1,80 @@
+{
+  "categories": [
+    {
+      "id": "weather",
+      "name": "Weather Information",
+      "description": "Get weather forecasts, alerts, and agricultural weather guidance",
+      "icon": "Cloud",
+      "color": "#3b82f6",
+      "questions": [
+        "What's today's weather forecast?",
+        "Will it rain this week?",
+        "What's the best time for sowing?",
+        "Any weather alerts for my area?"
+      ],
+      "answers": {
+        "What's today's weather forecast?": "Today's weather shows partly cloudy conditions with temperatures ranging from 22°C to 28°C. Light winds from the southeast at 10-15 km/h. Good conditions for most farming activities.",
+        "Will it rain this week?": "Weather models indicate a 60% chance of rain on Thursday and Friday this week. Expected rainfall: 15-25mm. Plan your field activities accordingly.",
+        "What's the best time for sowing?": "Based on current weather patterns, the optimal sowing window is in the next 3-5 days before the expected rainfall. Soil moisture conditions are favorable.",
+        "Any weather alerts for my area?": "No severe weather alerts currently active. However, monitor for potential thunderstorms mid-week. Stay updated with local weather services."
+      }
+    },
+    {
+      "id": "plant-protection",
+      "name": "Plant Protection",
+      "description": "Learn about pest control, disease management, and crop protection",
+      "icon": "Shield",
+      "color": "#10b981",
+      "questions": [
+        "How to control aphids in crops?",
+        "What are signs of fungal diseases?",
+        "Best organic pesticides available?",
+        "When to spray for pest control?"
+      ],
+      "answers": {
+        "How to control aphids in crops?": "For aphid control: 1) Use neem oil spray (5ml/liter water), 2) Introduce ladybugs as natural predators, 3) Apply insecticidal soap, 4) Remove affected plant parts. Spray early morning or evening.",
+        "What are signs of fungal diseases?": "Common fungal disease signs: yellowing leaves, white powdery coating, dark spots on leaves, wilting despite adequate water, stunted growth. Early detection is key for effective treatment.",
+        "Best organic pesticides available?": "Effective organic options: Neem oil, Bacillus thuringiensis (Bt), diatomaceous earth, pyrethrin-based sprays, garlic-chili spray. Always follow application guidelines and safety measures.",
+        "When to spray for pest control?": "Best spraying times: Early morning (6-8 AM) or late evening (6-8 PM). Avoid midday heat and windy conditions. Check weather - no rain expected for 24 hours after application."
+      }
+    },
+    {
+      "id": "commodity-pricing",
+      "name": "Commodity Pricing",
+      "description": "Get current market prices, trends, and selling guidance",
+      "icon": "TrendingUp",
+      "color": "#f59e0b",
+      "questions": [
+        "What are today's wheat prices?",
+        "Best time to sell my produce?",
+        "Market trends for rice this month?",
+        "Where to get best prices nearby?"
+      ],
+      "answers": {
+        "What are today's wheat prices?": "Current wheat prices: ₹2,150-2,200 per quintal in major mandis. Prices are stable with slight upward trend. Quality wheat (moisture <12%) getting premium rates.",
+        "Best time to sell my produce?": "Market analysis suggests selling in next 2-3 weeks. Demand is increasing due to festival season. Avoid immediate post-harvest rush when prices typically dip.",
+        "Market trends for rice this month?": "Rice prices showing 5-8% increase this month. Basmati: ₹4,200-4,500/quintal, Non-basmati: ₹2,800-3,200/quintal. Export demand driving prices up.",
+        "Where to get best prices nearby?": "Top mandis in your region: 1) Central Mandi - ₹50-80 premium, 2) Cooperative Society - transparent pricing, 3) Direct buyer contacts available. Check transport costs before deciding."
+      }
+    },
+    {
+      "id": "schemes",
+      "name": "Government Schemes",
+      "description": "Information about government schemes and subsidies for farmers",
+      "icon": "FileText",
+      "color": "#8b5cf6",
+      "questions": [
+        "PM-KISAN Scheme details",
+        "Crop Insurance benefits",
+        "Soil Health Card information",
+        "Kisan Credit Card eligibility"
+      ],
+      "answers": {
+        "PM-KISAN Scheme details": "PM-KISAN provides ₹6,000 per year in 3 installments of ₹2,000 each to eligible farmer families. Benefits are transferred directly to bank accounts. Apply online at pmkisan.gov.in with Aadhaar and land records.",
+        "Crop Insurance benefits": "Pradhan Mantri Fasal Bima Yojana covers crop losses due to natural disasters, pests, and diseases. Premium: 2% for Kharif, 1.5% for Rabi crops. Claim settlement within 60 days of harvest.",
+        "Soil Health Card information": "Free soil testing every 2 years providing nutrient status and fertilizer recommendations. Helps optimize fertilizer use and improve soil health. Contact nearest Krishi Vigyan Kendra for testing.",
+        "Kisan Credit Card eligibility": "Available to farmers, tenant farmers, oral lessees, and SHG members. Provides credit up to ₹3 lakh at 7% interest (4% with subsidy). Required: land documents, Aadhaar, PAN card."
+      }
+    }
+  ]
+}
