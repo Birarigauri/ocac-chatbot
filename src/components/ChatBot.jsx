@@ -6,16 +6,22 @@ import portalConfig from "../config/portalConfig.json";
 
 const ChatBot = ({ isOpen, onClose, category, isPopup = false }) => {
   const [messages, setMessages] = useState([]);
-  const [currentFlow, setCurrentFlow] = useState('schemes');
+  const [currentFlow, setCurrentFlow] = useState('categories');
+  const [selectedCategory, setSelectedCategory] = useState(category || null);
   const [selectedScheme, setSelectedScheme] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [theme, setTheme] = useState(portalConfig.portal.defaultTheme);
   const config = portalConfig.portal;
 
   const getAvailableQuestions = () => {
-    if (category) {
-      // Use category-specific questions
-      return category.questions.map(question => ({
+    if (currentFlow === 'categories') {
+      return categoriesData.categories.map(category => ({
+        text: category.name,
+        type: 'category',
+        data: category
+      }));
+    } else if (selectedCategory && currentFlow === 'category-questions') {
+      return selectedCategory.questions.map(question => ({
         text: question,
         type: 'question',
         data: question
@@ -37,7 +43,20 @@ const ChatBot = ({ isOpen, onClose, category, isPopup = false }) => {
   };
 
   const handleQuestionClick = (item) => {
-    if (item.type === 'scheme') {
+    if (item.type === 'category') {
+      setMessages(prev => [...prev, { type: 'user', text: item.text }]);
+      setIsLoading(true);
+      
+      setTimeout(() => {
+        setMessages(prev => [
+          ...prev,
+          { type: 'bot', text: `Great! You've selected ${item.data.name}. ${item.data.description}. Here are some questions I can help you with:` }
+        ]);
+        setSelectedCategory(item.data);
+        setCurrentFlow('category-questions');
+        setIsLoading(false);
+      }, 1500);
+    } else if (item.type === 'scheme') {
       setMessages(prev => [...prev, { type: 'user', text: item.text }]);
       setIsLoading(true);
       
@@ -55,7 +74,7 @@ const ChatBot = ({ isOpen, onClose, category, isPopup = false }) => {
       setIsLoading(true);
       
       setTimeout(() => {
-        const answer = category ? category.answers[item.data] : selectedScheme.answers[item.data];
+        const answer = selectedCategory ? selectedCategory.answers[item.data] : selectedScheme.answers[item.data];
         setMessages(prev => [...prev, { type: 'bot', text: answer }]);
         setIsLoading(false);
       }, 1500);
@@ -72,11 +91,29 @@ const ChatBot = ({ isOpen, onClose, category, isPopup = false }) => {
     setSelectedScheme(null);
   };
 
+  const handleBackToCategories = () => {
+    setMessages(prev => [
+      ...prev,
+      { type: 'user', text: 'Show all categories' },
+      { type: 'bot', text: 'Please select a category to get specialized assistance:' }
+    ]);
+    setCurrentFlow('categories');
+    setSelectedCategory(null);
+    setSelectedScheme(null);
+  };
+
   const handleBack = () => {
-    if (category) {
-      onClose();
-    } else {
-      handleBackToSchemes();
+    if (selectedScheme) {
+      if (selectedCategory) {
+        setCurrentFlow('category-questions');
+        setSelectedScheme(null);
+      } else {
+        handleBackToSchemes();
+      }
+    } else if (selectedCategory) {
+      handleBackToCategories();
+    } else if (currentFlow === 'schemes') {
+      handleBackToCategories();
     }
   };
 
@@ -161,8 +198,7 @@ const ChatBot = ({ isOpen, onClose, category, isPopup = false }) => {
                   background: 'transparent',
                   color: 'white',
                   fontSize: '0.8rem',
-                  padding: '0',
-                  boxShadow: 'none',
+                  padding: '10px',
                   fontWeight: '500',
                   width: '40px'
                 }}>
@@ -239,9 +275,9 @@ const ChatBot = ({ isOpen, onClose, category, isPopup = false }) => {
                     Welcome to {config.name}! <Sprout size={16} className="ms-1" />
                   </div>
                   <p className="mb-0" style={{ lineHeight: '1.5', fontSize: '0.9rem', color: theme === 'dark' ? '#d1d5db' : '#6b7280' }}>
-                    {category 
-                      ? `I'm here to help you with ${category.name.toLowerCase()}. Ask me anything about this topic!`
-                      : "I'm here to help you with government schemes for farmers. Select a scheme below to get detailed information."
+                    {selectedCategory 
+                      ? `I'm here to help you with ${selectedCategory.name.toLowerCase()}. Ask me anything about this topic!`
+                      : "I'm your agricultural assistant. Please select a category below to get specialized help."
                     }
                   </p>
                 </div>
@@ -396,7 +432,7 @@ const ChatBot = ({ isOpen, onClose, category, isPopup = false }) => {
                         animation: 'bounce 1.4s ease-in-out 0.4s infinite both'
                       }} />
                     </div>
-                    <span className="ms-3" style={{ fontSize: '0.9rem', fontStyle: 'italic', color: config.colors.primary }}> {config.name} is thinking...</span>
+                    <span className="ms-3" style={{ fontSize: '1rem', fontStyle: 'italic', color: config.colors.primary }}> {config.name} is thinking...</span>
                   </div>
                 </div>
               </div>
@@ -418,7 +454,7 @@ const ChatBot = ({ isOpen, onClose, category, isPopup = false }) => {
           position: 'relative',
           boxShadow: isPopup ? '0 -4px 20px rgba(0,0,0,0.1)' : 'none'
         }}>
-          {(currentFlow !== 'schemes' || category) && (
+          {currentFlow !== 'categories' && (
             <div className={isPopup ? "position-absolute" : "text-center mb-3"} style={isPopup ? {
               top: '10px',
               left: '10px',
@@ -435,7 +471,7 @@ const ChatBot = ({ isOpen, onClose, category, isPopup = false }) => {
                   fontSize: '0.8rem',
                   padding: isPopup ? '8px' : '5px 14px',
                   fontWeight: '500',
-                  boxShadow: `0 2px 8px ${config.colors.secondary}4D`,
+                  // boxShadow: `0 2px 8px ${config.colors.secondary}4D`,
                   minWidth: isPopup ? '36px' : 'auto',
                   height: isPopup ? '36px' : 'auto',
                   display: 'flex',
@@ -443,7 +479,7 @@ const ChatBot = ({ isOpen, onClose, category, isPopup = false }) => {
                   justifyContent: 'center'
                 }}
               >
-                {isPopup ? '←' : `← ${category ? 'Back to Categories' : 'Back to All Schemes'}`}
+                {isPopup ? '←' : `← ${selectedScheme ? (selectedCategory ? 'Back to Questions' : 'Back to Schemes') : 'Back to Categories'}`}
               </button>
             </div>
           )}
@@ -457,8 +493,8 @@ const ChatBot = ({ isOpen, onClose, category, isPopup = false }) => {
               scrollBehavior: 'smooth',
               alignItems: 'center',
               textAlign: 'center',
-              paddingLeft: isPopup && (currentFlow !== 'schemes' || category) ? '50px' : '0',
-              paddingRight: isPopup && (currentFlow !== 'schemes' || category) ? '10px' : '0'
+              paddingLeft: isPopup && currentFlow !== 'categories' ? '50px' : '0',
+              paddingRight: isPopup && currentFlow !== 'categories' ? '10px' : '0'
             }}
           >
             {getAvailableQuestions().map((item, index) => (
@@ -487,7 +523,7 @@ const ChatBot = ({ isOpen, onClose, category, isPopup = false }) => {
                     e.target.style.background = config.colors.primary;
                     e.target.style.color = 'white';
                     e.target.style.transform = 'translateX(4px)';
-                    e.target.style.boxShadow = `0 2px 8px ${config.colors.primary}66`;
+                    // e.target.style.boxShadow = `0 2px 8px ${config.colors.primary}66`;
                     e.target.style.borderColor = config.colors.primary;
                   } else {
                     e.target.style.color = config.colors.primary;

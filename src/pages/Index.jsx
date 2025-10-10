@@ -1,7 +1,11 @@
-import HomeScreen from "@/components/HomeScreen";
+import ChatBot from "@/components/ChatBot";
 
 const Index = () => {
-  return <HomeScreen />;
+  return (
+    <div style={{ height: '100vh' }}>
+      <ChatBot />
+    </div>
+  );
 };
 
 export default Index;
